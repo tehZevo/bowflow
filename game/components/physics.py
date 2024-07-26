@@ -27,7 +27,6 @@ class Physics(Component):
 
         #TODO: mass?
         self.vel = self.vel + self.force
-        #TODO: air friction?
 
         self.force = Vector2()
 
@@ -48,6 +47,7 @@ class Physics(Component):
                     pos.set_pos(fh_pos)
 
         pos.set_pos(pos.pos + self.vel)
+        self.vel = self.vel * (1 - AIR_FRICTION)
 
     def dislodge(self):
         self.on_ground = False

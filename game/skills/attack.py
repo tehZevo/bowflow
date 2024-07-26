@@ -5,7 +5,7 @@ from ..skilleffects import Damage, ForEachTarget
 from ..skilleffects.target_methods import TargetBox
 
 effect = ForEachTarget(
-    in_a=TargetBox(Vector2(4, 0), Vector2(4, 4), max_targets=4),
+    in_a=TargetBox(Vector2(4, 0), Vector2(8, 4), max_targets=4),
     apply=[Damage(100)]
 )
 

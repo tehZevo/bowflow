@@ -24,14 +24,17 @@ class Player(Component):
         actor = self.get_component(Actor)
 
         if not phys.on_ground and keys[pygame.K_d]:
-            actor.act(UseSkill(leap), buffer=False)
+            actor.act(UseSkill(leap, cast_direction=x), buffer=False)
         
         if phys.on_ground and keys[pygame.K_c]:
             actor.act(Jump(0.15))
         
         if phys.on_ground and x != 0:
             actor.act(Move(x / 100))
+        
+        if not phys.on_ground and x != 0:
+            actor.act(Move(x / 1000))
 
         if keys[pygame.K_z]:
-            actor.act(UseSkill(attack), buffer=False)
+            actor.act(UseSkill(attack, cast_direction=x), buffer=False)
             
