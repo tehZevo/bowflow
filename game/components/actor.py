@@ -2,6 +2,7 @@ import pygame
 
 from ..ecs.component import Component
 from ..data.stats import Stats
+from .damage_listener import DamageListener
 
 class Actor(Component):
     def __init__(self):
@@ -13,9 +14,11 @@ class Actor(Component):
 
         self.stats = Stats(hp=100, mp=100)
     
-    def damage(self, amount):
-        print("ow", amount)
+    def damage(self, amount, source=None):
         self.stats.hp -= amount
+
+        for listener in self.entity.get_all_components(DamageListener):
+            listener.on_damage(amount, source)
         
     def begin_action(self, action):
         self.action = action

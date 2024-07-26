@@ -25,9 +25,9 @@ async def main():
         Player(),
     ])
 
-    for i in range(10):
+    for i in range(100):
         monster = world.create_entity([
-            Position(Vector2(10 + i - 5, 1)),
+            Position(Vector2(10 + i / 10 - 5, 1)),
             Physics(),
             Sprite(),
             Actor(),

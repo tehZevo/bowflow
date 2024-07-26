@@ -15,11 +15,16 @@ class Entity:
     
     def get_component(self, component_type):
         #TODO: what if duplicates or different subclasses?
-        matches = [c for c in self.components if isinstance(c, component_type)]
+        matches = self.get_all_components(component_type)
+        
         if len(matches) > 0:
             return matches[0]
         
         return None
+    
+    def get_all_components(self, component_type):
+        matches = [c for c in self.components if isinstance(c, component_type)]
+        return matches
             
     def update(self):
         for component in self.components:

@@ -9,6 +9,6 @@ class Damage(SkillEffect):
     def start(self, skill):
         actor = skill.target.get_component(Actor)
 
-        actor.damage(self.power)
+        actor.damage(self.power, skill.caster)
 
         skill.done = True
