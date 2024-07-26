@@ -8,6 +8,7 @@ class Entity:
         component.entity = self
         component.world = self.world
         self.components.append(component)
+        component.init()
     
     def remove(self):
         self.world.remove_entity(self)
@@ -19,7 +20,7 @@ class Entity:
             return matches[0]
         
         return None
-    
+            
     def update(self):
         for component in self.components:
             component.update()

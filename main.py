@@ -25,13 +25,15 @@ async def main():
         Player(),
     ])
 
-    monster = world.create_entity([
-        Position(Vector2(10, 1)),
-        Physics(),
-        Sprite(),
-        Actor(),
-        Monster(),
-    ])
+    for i in range(10):
+        monster = world.create_entity([
+            Position(Vector2(10 + i - 5, 1)),
+            Physics(),
+            Sprite(),
+            Actor(),
+            Monster(),
+        ])
+        monster.get_component(Sprite).set_image("monster.png")
 
     #TODO: foothold chain creator
     foothold = world.create_entity([
@@ -58,7 +60,6 @@ async def main():
     camera_comp = camera.get_component(Camera)
 
     player.get_component(Sprite).set_image("player.png")
-    monster.get_component(Sprite).set_image("monster.png")
 
     last_time = time.time()
     while True:

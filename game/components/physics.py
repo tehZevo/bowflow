@@ -15,7 +15,8 @@ class Physics(Component):
 
         self.on_ground = False
         self.foothold = None
-        self.foothold_pos = None #TODO: make function for dislodging from foothold
+        self.foothold_pos = None
+        self.stay_on_footholds = False
     
     def apply_force(self, force):
         self.force = self.force + force
@@ -72,6 +73,9 @@ class Physics(Component):
 
         self.vel = self.vel * (1 - GROUND_FRICTION)
 
+        if self.stay_on_footholds:
+            self.foothold_pos = max(0, min(1, self.foothold_pos))
+            
         #TODO: move to prev/next foothold if any, else dislodge
         if self.foothold_pos < 0 or self.foothold_pos > 1:
             self.dislodge()

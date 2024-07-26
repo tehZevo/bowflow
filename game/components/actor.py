@@ -13,6 +13,10 @@ class Actor(Component):
 
         self.stats = Stats(hp=100, mp=100)
     
+    def damage(self, amount):
+        print("ow", amount)
+        self.stats.hp -= amount
+        
     def begin_action(self, action):
         self.action = action
         action.start(self.entity)
@@ -21,13 +25,13 @@ class Actor(Component):
         self.action.end(self.entity)
         self.action = None
 
-    def act(self, action, force=False):
+    def act(self, action, force=False, buffer=True):
         if self.action is None:
             self.begin_action(action)
         elif self.action.interruptible or force:
             self.end_action()
             self.begin_action(action)
-        else:
+        elif buffer:
             self.next_action = action
             
     def update(self):

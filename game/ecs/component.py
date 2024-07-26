@@ -4,6 +4,9 @@ class Component:
         self.entity = None
         self.world = None
 
+    def init(self):
+        pass
+    
     def update(self):
         pass
 

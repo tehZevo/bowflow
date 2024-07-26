@@ -2,6 +2,7 @@ import random
 
 from ..ecs.component import Component
 from .actor import Actor
+from .physics import Physics
 from ..actions import Move
 
 class Monster(Component):
@@ -10,6 +11,9 @@ class Monster(Component):
         self.target = None
         self.state = "idle"
         self.move_dir = 0
+
+    def init(self):
+        self.get_component(Physics).stay_on_footholds = True
 
     def update_idle(self):
         actor = self.get_component(Actor)
