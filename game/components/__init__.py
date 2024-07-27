@@ -8,4 +8,3 @@ from .camera import Camera
 from .actor import Actor
 from .monster import Monster
 from .skill import Skill
-from .skill_tree_ui import SkillTreeUI

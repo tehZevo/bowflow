@@ -16,7 +16,7 @@ def scaling(ratio):
 
     return [effect]
 
-attack = SkillDef(
+magibolt = SkillDef(
     scaling,
     use_time=0.5,
     max_level=3,

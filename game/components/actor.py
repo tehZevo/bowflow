@@ -29,7 +29,7 @@ class Actor(Component):
         self.action.end(self.entity)
         self.action = None
 
-    def use_skill(self, skilldef, override_direction=None):
+    def use_skill(self, skilldef, level=1, override_direction=None):
         from ..actions.useskill import UseSkill
 
         #ground/air checks
@@ -41,7 +41,7 @@ class Actor(Component):
         
         dir = override_direction if override_direction is not None else self.facing_dir
 
-        self.act(UseSkill(skilldef, dir))
+        self.act(UseSkill(skilldef, level=level, cast_direction=dir))
 
     def act(self, action, force=False):
         if self.action is None:

@@ -6,7 +6,7 @@ import pygame_gui
 import i18n
 
 from game.ecs import World
-from game.components import Physics, Player, Position, Sprite, Renderable, Foothold, Camera, Actor, Monster, SkillTreeUI
+from game.components import Physics, Player, Position, Sprite, Renderable, Foothold, Camera, Actor, Monster
 from game.constants import DT
 from game.data.skill_tree import SkillTree
 from game.data.player_data import PlayerData
@@ -22,17 +22,12 @@ async def main():
     pygame.display.set_caption("Hello World")
     manager = pygame_gui.UIManager((1280, 640))
 
-    hello_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((350, 275), (16, 16)),
-                                             text='',
-                                             manager=manager)
-
-
     world = World()
 
     player_data = PlayerData(
         skill_binds = {
             pygame.K_d: "leap",
-            pygame.K_z: "attack",
+            pygame.K_z: "magibolt",
         },
         action_binds = {
             pygame.K_LEFT: "move_left",
@@ -40,6 +35,9 @@ async def main():
             pygame.K_UP: "move_up",
             pygame.K_DOWN: "move_down",
             pygame.K_c: "jump",
+        },
+        skill_allocations={
+            "magibolt": 1
         },
         skill_points=100
     )
@@ -88,7 +86,7 @@ async def main():
 
     skill_tree = SkillTree()
 
-    skill_tree_window(Vector2(32, 32), skill_tree)
+    skill_tree_window(Vector2(32, 32), skill_tree, player_data)
     
     camera_comp = camera.get_component(Camera)
 
@@ -105,10 +103,6 @@ async def main():
                 pygame.quit()
                 sys.exit()
 
-            if event.type == pygame_gui.UI_BUTTON_PRESSED:
-                if event.ui_element == hello_button:
-                    print('Hello World!')
-            
             manager.process_events(event)
 
         manager.update(DT)

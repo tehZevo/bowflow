@@ -21,6 +21,26 @@ class Player(Component):
         skills = pressed_binds(self.player_data.skill_binds)
         return actions, skills
 
+    def use_skill(self, skill_name, move_dir):
+        actor = self.get_component(Actor)
+
+        if skill_name not in skill_list:
+            print("unknown skill:", skill_name)
+            return
+
+        if skill_name not in self.player_data.skill_allocations:
+            print("player does not have skill:", skill_name)
+            return
+        
+        #get level from allocations
+        skill_level = self.player_data.skill_allocations[skill_name]
+        if skill_level == 0:
+            print("player has skill", skill_name, "level 0, not using.")
+            return
+
+        skill = skill_list[skill_name]        
+        actor.use_skill(skill, level=skill_level, override_direction=move_dir)
+            
     def update(self):
         actions, skills = self.get_pressed_binds()
 
@@ -36,9 +56,7 @@ class Player(Component):
         #prioritize skills over other actions
         if len(skills) > 0:
             skill_name = list(skills)[0]
-            skill = skill_list[skill_name] #TODO: check for errors
-            actor.use_skill(skill, override_direction=move_dir)
-            
+            self.use_skill(skill_name, move_dir)
             return
         
         if phys.on_ground and "jump" in actions:

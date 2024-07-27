@@ -3,5 +3,5 @@ import game.skills as skills
 
 skill_list = {
     "leap": skills.leap,
-    "attack": skills.attack,
+    "magibolt": skills.magibolt,
 }
