@@ -3,6 +3,7 @@ import pygame
 from ..ecs.component import Component
 from ..data.stats import Stats
 from .damage_listener import DamageListener
+from .physics import Physics
 
 class Actor(Component):
     def __init__(self):
@@ -28,13 +29,27 @@ class Actor(Component):
         self.action.end(self.entity)
         self.action = None
 
-    def act(self, action, force=False, buffer=True):
+    def use_skill(self, skilldef, override_direction=None):
+        from ..actions.useskill import UseSkill
+
+        #ground/air checks
+        phys = self.get_component(Physics)
+        if not skilldef.in_air and not phys.on_ground:
+            return
+        if not skilldef.on_ground and phys.on_ground:
+            return
+        
+        dir = override_direction if override_direction is not None else self.facing_dir
+
+        self.act(UseSkill(skilldef, dir))
+
+    def act(self, action, force=False):
         if self.action is None:
             self.begin_action(action)
         elif self.action.interruptible or force:
             self.end_action()
             self.begin_action(action)
-        elif buffer:
+        elif action.bufferable:
             self.next_action = action
             
     def update(self):

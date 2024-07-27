@@ -11,12 +11,13 @@ class UseSkill(Action):
         self.cast_direction = cast_direction
         #protection against non-[-1/1] cast directions
         self.cast_direction = None if cast_direction is None else 1 if cast_direction > 0 else -1 if cast_direction < 0 else None
+        self.bufferable = skilldef.bufferable
     
     def start(self, entity):
         #allow "buffered" turns before cast
         if self.cast_direction is not None:
             entity.get_component(Actor).facing_dir = self.cast_direction
-            
+        
         for effect in self.skilldef.effects:
             skill_comp = Skill(effect)
             skill_comp.caster = entity
