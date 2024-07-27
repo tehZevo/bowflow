@@ -25,6 +25,11 @@ class Entity:
     def get_all_components(self, component_type):
         matches = [c for c in self.components if isinstance(c, component_type)]
         return matches
+    
+    def for_each_component(self, component_type, f):
+        components = self.get_all_components(component_type)
+        for c in components:
+            f(c)
             
     def update(self):
         for component in self.components:

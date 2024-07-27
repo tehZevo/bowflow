@@ -4,6 +4,7 @@ from ..ecs.component import Component
 from ..data.stats import Stats
 from .damage_listener import DamageListener
 from .death_listener import DeathListener
+from .stats_listener import StatsListener
 from .physics import Physics
 
 class Actor(Component):
@@ -21,6 +22,9 @@ class Actor(Component):
 
         for listener in self.entity.get_all_components(DamageListener):
             listener.on_damage(amount, source)
+        
+        for listener in self.entity.get_all_components(StatsListener):
+            listener.on_stats_changed(self.stats)
         
     def begin_action(self, action):
         self.action = action

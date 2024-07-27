@@ -8,7 +8,7 @@ import pygame_gui
 import i18n
 
 from game.ecs import World
-from game.components import Physics, Player, Position, Sprite, Renderable, Foothold, Camera, Actor, Monster
+from game.components import Physics, Player, Position, Sprite, Renderable, Foothold, Camera, Actor, Monster, HudHooks, KeyBindMonitor
 from game.constants import DT
 from game.data.skill_tree import SkillTree
 from game.data.player_data import PlayerData
@@ -27,6 +27,8 @@ async def main():
     manager = pygame_gui.UIManager((1280, 640), "game/assets/theme.json")
 
     world = World()
+    
+    hud = Hud()
 
     player_data = PlayerData(
         skill_binds = {
@@ -39,6 +41,8 @@ async def main():
             pygame.K_UP: "move_up",
             pygame.K_DOWN: "move_down",
             pygame.K_c: "jump",
+            # pygame.K_k: "keys", #TODO: action bindings
+            pygame.K_l: "skills",
         },
         skill_allocations={
             "magibolt": 1
@@ -53,6 +57,8 @@ async def main():
         Physics(),
         Sprite(offset=Vector2(-1/2, -1)),
         Actor(),
+        HudHooks(hud),
+        KeyBindMonitor(player_data),
         player_comp,
     ])
 
@@ -93,8 +99,6 @@ async def main():
     skill_window = SkillTreeWindow(skill_tree, player_data)
     
     camera_comp = camera.get_component(Camera)
-
-    hud = Hud()
 
     player.get_component(Sprite).set_image("player.png")
 

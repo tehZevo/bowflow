@@ -12,3 +12,6 @@ class Component:
 
     def get_component(self, component_type):
         return self.entity.get_component(component_type)
+    
+    def for_each_component(self, component_type, f):
+        self.entity.for_each_component(component_type, f)

@@ -34,4 +34,3 @@ class SkillButton:
         #TODO: where to get max info from
         max = "???"
         self.level_label.set_text(f"{level}/{max}")
-        

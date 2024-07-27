@@ -1,4 +1,3 @@
-import pygame
 from pygame.math import Vector2
 
 from ..ecs.component import Component
@@ -6,26 +5,32 @@ from .physics import Physics
 from .actor import Actor
 from .position import Position
 from .level_up_listener import LevelUpListener
+from .player_data_listener import PlayerDataListener
 from .level_up_effect import LevelUpEffect
 from ..actions import Move, Jump
 from ..data.skill_list import skill_list
 from ..data.exp_calcs import calc_player_exp, skill_points_per_level
+from .key_bind_listener import KeyBindListener
 
-def pressed_binds(bind_map):
-    pressed = pygame.key.get_pressed()
-    binds = [bind for key, bind in bind_map.items() if pressed[key]]
-    return binds
-
-class Player(Component, LevelUpListener):
+class Player(Component, LevelUpListener, KeyBindListener):
     def __init__(self, player_data):
         super().__init__()
         self.player_data = player_data
+        self.move_dir = 0
     
-    def get_pressed_binds(self):
-        actions = pressed_binds(self.player_data.action_binds)
-        skills = pressed_binds(self.player_data.skill_binds)
-        return actions, skills
+    def on_key_binds(self, actions, skills):
+        phys = self.get_component(Physics)
+        actor = self.get_component(Actor)
 
+        if len(skills) > 0:
+            self.use_skill(skills[0], self.move_dir)
+            return
+        
+        self.move_dir = ("move_right" in actions) - ("move_left" in actions)
+
+        if phys.on_ground and "jump" in actions:
+            actor.act(Jump(0.15))
+    
     def on_level_up(self, level):
         #TODO: screen wipe on level up would be cool
         print(f"level up! ({self.player_data.level})")
@@ -47,7 +52,10 @@ class Player(Component, LevelUpListener):
 
             for listener in self.entity.get_all_components(LevelUpListener):
                 listener.on_level_up(self.player_data.level)
-
+        
+        for listener in self.entity.get_all_components(PlayerDataListener):
+            listener.on_player_data_changed(self.player_data)
+        
     def use_skill(self, skill_name, move_dir):
         actor = self.get_component(Actor)
 
@@ -69,28 +77,15 @@ class Player(Component, LevelUpListener):
         actor.use_skill(skill, level=skill_level, override_direction=move_dir)
             
     def update(self):
-        actions, skills = self.get_pressed_binds()
-
         #TODO: only jump on press (make hold not jump so player has to time it?)
         #TODO: this might require adding a flag to action binds that means "only update on press"
         #TODO: same with skills -- allow buffering but require an extra press
 
         actor = self.get_component(Actor)
         phys = self.get_component(Physics)
-        
-        move_dir = ("move_right" in actions) - ("move_left" in actions)
 
-        #prioritize skills over other actions
-        if len(skills) > 0:
-            skill_name = list(skills)[0]
-            self.use_skill(skill_name, move_dir)
-            return
+        if phys.on_ground and self.move_dir != 0:
+            actor.act(Move(self.move_dir / 100))
         
-        if phys.on_ground and "jump" in actions:
-            actor.act(Jump(0.15))
-        
-        if phys.on_ground and move_dir != 0:
-            actor.act(Move(move_dir / 100))
-        
-        if not phys.on_ground and move_dir != 0:
-            actor.act(Move(move_dir / 1000))
+        if not phys.on_ground and self.move_dir != 0:
+            actor.act(Move(self.move_dir / 1000))
