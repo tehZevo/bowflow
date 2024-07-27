@@ -1,5 +1,7 @@
 import time
 import asyncio
+import math
+
 import pygame, sys
 from pygame.math import Vector2
 import pygame_gui
@@ -13,13 +15,22 @@ from game.data.player_data import PlayerData
 
 from game.ui.skill_tree_window import skill_tree_window
 
+
+from game.data.exp_calcs import calc_player_exp, calc_mob_exp
+
+for level in range(1, 100):
+    p_exp = calc_player_exp(level)
+    m_exp = calc_mob_exp(level)
+    kills = round(p_exp / m_exp)
+    print(level, "player TNL:", p_exp, "mob:", m_exp, "kills:", kills)
+
 #TODO: save key binds across plays
 
 async def main():
     pygame.init()
 
     screen = pygame.display.set_mode((1280, 640))
-    pygame.display.set_caption("Hello World")
+    pygame.display.set_caption("Project Bow Flow")
     manager = pygame_gui.UIManager((1280, 640))
 
     world = World()

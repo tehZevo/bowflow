@@ -1,4 +1,9 @@
+from math import log10, floor
+
 from pygame.math import Vector2
+
+def round_sigfigs(x, figs):
+    return int(round(x, figs - (1 + floor(log10(abs(x))))))
 
 def point_in_aabb(point, min, max):
     return point.x >= min.x and point.x < max.x and point.y >= min.y and point.y < max.y
