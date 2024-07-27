@@ -9,6 +9,8 @@ class PlayerData:
     action_binds: dict = field(default_factory=lambda: dict)
     skill_allocations: dict = field(default_factory=lambda: dict)
     skill_points: int = 0
+    level: int = 1
+    exp: int = 0
 
     def get_skill_level(self, skill):
         #TODO: do we want to check for skill validitity here?

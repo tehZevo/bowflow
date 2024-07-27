@@ -3,15 +3,17 @@ import pygame
 from ..ecs.component import Component
 from .physics import Physics
 from .actor import Actor
+from .level_up_listener import LevelUpListener
 from ..actions import Move, Jump
 from ..data.skill_list import skill_list
+from ..data.exp_calcs import calc_player_exp, skill_points_per_level
 
 def pressed_binds(bind_map):
     pressed = pygame.key.get_pressed()
     binds = [bind for key, bind in bind_map.items() if pressed[key]]
     return binds
 
-class Player(Component):
+class Player(Component, LevelUpListener):
     def __init__(self, player_data):
         super().__init__()
         self.player_data = player_data
@@ -20,6 +22,24 @@ class Player(Component):
         actions = pressed_binds(self.player_data.action_binds)
         skills = pressed_binds(self.player_data.skill_binds)
         return actions, skills
+
+    def on_level_up(self, level):
+        #TODO: screen wipe on level up would be cool
+        print(f"level up! ({self.player_data.level})")
+        self.player_data.skill_points += skill_points_per_level(level)
+        print("plus", skill_points_per_level(level), "skill point(s)!")
+        
+    def give_exp(self, exp):
+        print(f"+{exp} exp")
+        self.player_data.exp += exp
+        exp_tnl = calc_player_exp(self.player_data.level)
+        while self.player_data.exp >= exp_tnl:
+            self.player_data.exp -= exp_tnl
+            self.player_data.level += 1
+            exp_tnl = calc_player_exp(self.player_data.level)
+
+            for listener in self.entity.get_all_components(LevelUpListener):
+                listener.on_level_up(self.player_data.level)
 
     def use_skill(self, skill_name, move_dir):
         actor = self.get_component(Actor)

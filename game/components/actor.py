@@ -3,6 +3,7 @@ import pygame
 from ..ecs.component import Component
 from ..data.stats import Stats
 from .damage_listener import DamageListener
+from .death_listener import DeathListener
 from .physics import Physics
 
 class Actor(Component):
@@ -54,6 +55,9 @@ class Actor(Component):
             
     def update(self):
         if self.stats.hp <= 0:
+            for listener in self.entity.get_all_components(DeathListener):
+                listener.on_death()
+                
             self.entity.remove()
             
         if self.action is not None:

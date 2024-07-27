@@ -6,18 +6,35 @@ from .physics import Physics
 from .position import Position
 from ..actions import Move
 from .damage_listener import DamageListener
+from .death_listener import DeathListener
+from ..data.exp_calcs import calc_mob_exp
 
-class Monster(Component, DamageListener):
+class Monster(Component, DamageListener, DeathListener):
     def __init__(self):
         super().__init__()
         self.target = None
+        self.last_attacker = None
         self.move_dir = 0
+        
+        #TODO: dont hardcode level, use mobdef or something
+        self.level = 10
 
     def init(self):
         self.get_component(Physics).stay_on_footholds = True
 
     def on_damage(self, amount, source):
         self.target = source
+        
+        if source is not None:
+            self.last_attacker = source
+    
+    def on_death(self):
+        from .player import Player
+
+        if self.last_attacker is not None:
+            player = self.last_attacker.get_component(Player)
+            if player is not None:
+                player.give_exp(calc_mob_exp(self.level))
 
     def update_idle(self):
         actor = self.get_component(Actor)
