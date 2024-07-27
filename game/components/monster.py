@@ -17,7 +17,7 @@ class Monster(Component, DamageListener, DeathListener):
         self.move_dir = 0
         
         #TODO: dont hardcode level, use mobdef or something
-        self.level = 10
+        self.level = 100
 
     def init(self):
         self.get_component(Physics).stay_on_footholds = True

@@ -30,6 +30,5 @@ class Sprite(Renderable):
             pos = camera.to_screen(pos)
             offset = self.offset * PPU
 
-        #TODO: dont draw centered for ui...
         rect = pygame.Rect(pos.x + offset.x, pos.y + offset.y, 0, 0)
         screen.blit(self.image, rect)

@@ -1,9 +1,12 @@
 import pygame
+from pygame.math import Vector2
 
 from ..ecs.component import Component
 from .physics import Physics
 from .actor import Actor
+from .position import Position
 from .level_up_listener import LevelUpListener
+from .level_up_effect import LevelUpEffect
 from ..actions import Move, Jump
 from ..data.skill_list import skill_list
 from ..data.exp_calcs import calc_player_exp, skill_points_per_level
@@ -28,6 +31,10 @@ class Player(Component, LevelUpListener):
         print(f"level up! ({self.player_data.level})")
         self.player_data.skill_points += skill_points_per_level(level)
         print("plus", skill_points_per_level(level), "skill point(s)!")
+
+        self.world.create_entity([
+            LevelUpEffect(self.entity)
+        ])
         
     def give_exp(self, exp):
         print(f"+{exp} exp")
