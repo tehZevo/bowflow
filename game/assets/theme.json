@@ -1,0 +1,77 @@
+{
+    "@hud_bar":
+    {
+        "colours":
+        {
+            "normal_border": "#000000"
+        },
+        "misc":
+        {
+            "border_width": "1",
+            "shape": "rounded_rectangle",
+            "shape_corner_radius": "2"
+        }
+    },
+    "@health_bar":
+    {
+        "prototype": "@hud_bar",
+        "colours":
+        {
+            "filled_bar": "#ff7777",
+            "unfilled_bar": "#770000"
+        }
+    },
+    "@mana_bar":
+    {
+        "prototype": "@hud_bar",
+        "colours":
+        {
+            "filled_bar": "#7777ff",
+            "unfilled_bar": "#333366"
+        }
+    },
+    "@exp_bar":
+    {
+        "prototype": "@hud_bar",
+        "colours":
+        {
+            "filled_bar": "#ffff77",
+            "unfilled_bar": "#777700"
+        }
+    },
+    "@hud_text":
+    {
+        "colours":
+        {
+            "normal_text": "#ffffff",
+            "text_shadow": "#000000"
+        },
+        "font":
+        {
+            "bold": "0",
+            "italic": "0"
+        },
+        "misc":
+        {
+            "text_shadow": "1",
+            "text_shadow_size": "1",
+            "text_shadow_offset": "0,0"
+        }
+    },
+    "@hud_bar_text":
+    {
+        "prototype": "@hud_text",
+        "font":
+        {
+            "size": "12"
+        }
+    },
+    "@hud_level_text":
+    {
+        "prototype": "@hud_text",
+        "font":
+        {
+            "size": "16"
+        }
+    }
+}

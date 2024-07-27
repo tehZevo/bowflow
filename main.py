@@ -13,7 +13,9 @@ from game.constants import DT
 from game.data.skill_tree import SkillTree
 from game.data.player_data import PlayerData
 
-from game.ui.skill_tree_window import skill_tree_window
+from game.ui.skill_tree_window import SkillTreeWindow
+
+from game.ui.hud import Hud
 
 #TODO: save key binds across plays
 
@@ -22,7 +24,7 @@ async def main():
 
     screen = pygame.display.set_mode((1280, 640))
     pygame.display.set_caption("Project Bow Flow")
-    manager = pygame_gui.UIManager((1280, 640))
+    manager = pygame_gui.UIManager((1280, 640), "game/assets/theme.json")
 
     world = World()
 
@@ -88,9 +90,11 @@ async def main():
 
     skill_tree = SkillTree()
 
-    skill_tree_window(Vector2(32, 32), skill_tree, player_data)
+    skill_window = SkillTreeWindow(skill_tree, player_data)
     
     camera_comp = camera.get_component(Camera)
+
+    hud = Hud()
 
     player.get_component(Sprite).set_image("player.png")
 
