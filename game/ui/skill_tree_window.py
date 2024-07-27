@@ -5,6 +5,7 @@ from pygame_gui.elements.ui_window import UIWindow
 
 from .skill_button import skill_button
 from game.data.skill_list import skill_list
+from ..constants import SKILL_LEVEL_COST
 
 def job_skills_ui(skills, y, container, tree, player_data):
     for x, skill in enumerate(skills):
@@ -17,7 +18,7 @@ def job_skills_ui(skills, y, container, tree, player_data):
                 max_level = skill_list[skill].max_level #TODO: handle errors
                 if player_data.get_skill_level(skill) >= max_level:
                     return
-                if player_data.skill_points < 5:
+                if player_data.skill_points < SKILL_LEVEL_COST:
                     return
                 
                 player_data.upgrade_skill(skill)
