@@ -12,23 +12,17 @@ def pressed_binds(bind_map):
     return binds
 
 class Player(Component):
-    def __init__(self):
+    def __init__(self, player_data):
         super().__init__()
-        self.skill_binds = {
-            pygame.K_d: "leap",
-            pygame.K_z: "attack",
-        }
-        self.action_binds = {
-            pygame.K_LEFT: "move_left",
-            pygame.K_RIGHT: "move_right",
-            pygame.K_UP: "move_up",
-            pygame.K_DOWN: "move_down",
-            pygame.K_c: "jump",
-        }
+        self.player_data = player_data
+    
+    def get_pressed_binds(self):
+        actions = pressed_binds(self.player_data.action_binds)
+        skills = pressed_binds(self.player_data.skill_binds)
+        return actions, skills
 
     def update(self):
-        actions = pressed_binds(self.action_binds)
-        skills = pressed_binds(self.skill_binds)
+        actions, skills = self.get_pressed_binds()
 
         #TODO: only jump on press (make hold not jump so player has to time it?)
         #TODO: this might require adding a flag to action binds that means "only update on press"

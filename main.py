@@ -9,6 +9,7 @@ from game.ecs import World
 from game.components import Physics, Player, Position, Sprite, Renderable, Foothold, Camera, Actor, Monster, SkillTreeUI
 from game.constants import DT
 from game.data.skill_tree import SkillTree
+from game.data.player_data import PlayerData
 
 from game.ui.skill_button import skill_button
 
@@ -40,14 +41,28 @@ async def main():
 
     world = World()
 
-    playerComp = Player()
+    player_data = PlayerData(
+        skill_binds = {
+            pygame.K_d: "leap",
+            pygame.K_z: "attack",
+        },
+        action_binds = {
+            pygame.K_LEFT: "move_left",
+            pygame.K_RIGHT: "move_right",
+            pygame.K_UP: "move_up",
+            pygame.K_DOWN: "move_down",
+            pygame.K_c: "jump",
+        }
+    )
+
+    player_comp = Player(player_data)
     
     player = world.create_entity([
         Position(Vector2(1, 1)),
         Physics(),
         Sprite(offset=Vector2(-1/2, -1)),
         Actor(),
-        Player(),
+        player_comp,
     ])
 
     for i in range(10):
