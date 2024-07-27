@@ -11,22 +11,9 @@ from game.constants import DT
 from game.data.skill_tree import SkillTree
 from game.data.player_data import PlayerData
 
-from game.ui.skill_button import skill_button
+from game.ui.skill_tree_window import skill_tree_window
 
 #TODO: save key binds across plays
-
-def job_skills_ui(skills, y, container, tree):
-    for x, skill in enumerate(skills):
-        if skill is None:
-            continue
-    
-        skill_button(Vector2(x * 32, y * 32), skill, container, tree)
-
-def skill_tree_ui(tree, container):
-    job_skills_ui(tree.job1_skills, 3, container, tree)
-    job_skills_ui(tree.job2_skills, 2, container, tree)
-    job_skills_ui(tree.job3_skills, 1, container, tree)
-    job_skills_ui(tree.job4_skills, 0, container, tree)
 
 async def main():
     pygame.init()
@@ -38,6 +25,7 @@ async def main():
     hello_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((350, 275), (16, 16)),
                                              text='',
                                              manager=manager)
+
 
     world = World()
 
@@ -52,7 +40,8 @@ async def main():
             pygame.K_UP: "move_up",
             pygame.K_DOWN: "move_down",
             pygame.K_c: "jump",
-        }
+        },
+        skill_points=100
     )
 
     player_comp = Player(player_data)
@@ -99,7 +88,7 @@ async def main():
 
     skill_tree = SkillTree()
 
-    skill_tree_ui(skill_tree, None)
+    skill_tree_window(Vector2(32, 32), skill_tree)
     
     camera_comp = camera.get_component(Camera)
 
