@@ -13,9 +13,6 @@ class World:
         
         return entity
 
-    def remove_entity(self, entity):
-        self.entities = [e for e in self.entities if e != entity]
-
     def get_all_components(self, component_type):
         comps = []
         for entity in self.entities:
@@ -27,3 +24,5 @@ class World:
     def update(self):
         for entity in self.entities.copy():
             entity.update()
+        
+        self.entities = [e for e in self.entities if e.alive]

@@ -3,6 +3,7 @@ class Entity:
     def __init__(self):
         self.components = []
         self.world = None
+        self.alive = True
 
     def add_component(self, component):
         component.entity = self
@@ -11,7 +12,7 @@ class Entity:
         component.init()
     
     def remove(self):
-        self.world.remove_entity(self)
+        self.alive = False
     
     def get_component(self, component_type):
         #TODO: what if duplicates or different subclasses?

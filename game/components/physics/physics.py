@@ -18,6 +18,13 @@ class Physics(Component):
         self.foothold_pos = None
         self.stay_on_footholds = False
     
+    def move_to_foothold(self, fh, foothold_pos):
+        self.foothold = fh
+        self.foothold_pos = foothold_pos
+        self.on_ground = True
+        pos = fh.start + (fh.end - fh.end) * foothold_pos
+        self.get_component(Position).set_pos(pos)
+
     def apply_force(self, force):
         self.force = self.force + force
 

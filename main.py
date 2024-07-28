@@ -13,6 +13,7 @@ from game.components.graphics import Sprite, Renderable, Camera
 from game.components.ui import HudHooks
 from game.components.actor import Player, Actor, Monster
 from game.components.key_bind_monitor import KeyBindMonitor
+from game.components.spawner import Spawner
 from game.constants import DT
 from game.data.skill_tree import SkillTree
 from game.data.player_data import PlayerData
@@ -66,31 +67,25 @@ async def main():
         player_comp,
     ])
 
-    for i in range(100):
-        monster = world.create_entity([
-            Position(Vector2(10 + i - 5, 1)),
-            Physics(),
-            Sprite(),
-            Actor(),
-            Monster(),
-        ])
-        monster.get_component(Sprite).set_image("monster.png")
-
     #TODO: foothold chain creator
     foothold = world.create_entity([
-        Foothold(Vector2(-10, -10), Vector2(30, -10))
+        Foothold(Vector2(-10, -10), Vector2(30, -10)),
+        Spawner(),
     ])
 
     foothold = world.create_entity([
-        Foothold(Vector2(3, -8), Vector2(8, -8))
+        Foothold(Vector2(3, -8), Vector2(8, -8)),
+        Spawner(),
     ])
 
     foothold = world.create_entity([
-        Foothold(Vector2(12, -6), Vector2(16, -6))
+        Foothold(Vector2(12, -6), Vector2(16, -6)),
+        Spawner(),
     ])
 
     foothold = world.create_entity([
-        Foothold(Vector2(7, -7), Vector2(12, -9))
+        Foothold(Vector2(7, -7), Vector2(12, -9)),
+        Spawner(),
     ])
     
     camera = world.create_entity([

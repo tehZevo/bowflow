@@ -4,6 +4,7 @@ from game.ecs import Component
 from game.actions import Move
 from game.data.exp_calcs import calc_mob_exp
 from ..physics.physics import Physics
+from ..graphics.sprite import Sprite
 from ..physics.position import Position
 from .actor import Actor
 from .damage_listener import DamageListener
@@ -21,6 +22,7 @@ class Monster(Component, DamageListener, DeathListener):
 
     def init(self):
         self.get_component(Physics).stay_on_footholds = True
+        self.get_component(Sprite).set_image("monster.png")
 
     def on_damage(self, amount, source):
         self.target = source
