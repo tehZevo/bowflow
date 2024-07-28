@@ -6,6 +6,7 @@ from game.data.skill_list import skill_list
 from game.data.exp_calcs import calc_player_exp, skill_points_per_level
 from ..physics.physics import Physics
 from ..physics.position import Position
+from ..graphics import Sprite
 from ..graphics.level_up_effect import LevelUpEffect
 from .actor import Actor
 from .level_up_listener import LevelUpListener
@@ -18,6 +19,9 @@ class Player(Component, LevelUpListener, KeyBindListener):
         self.player_data = player_data
         self.move_dir = 0
     
+    def init(self):
+        self.get_component(Sprite).set_image("player.png")
+        
     def on_key_binds(self, actions, skills):
         phys = self.get_component(Physics)
         actor = self.get_component(Actor)

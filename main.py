@@ -1,3 +1,4 @@
+#TODO: cleanup imports
 import time
 import asyncio
 import math
@@ -22,95 +23,24 @@ from game.map.floor_generator import generate_floor
 from game.ui.skill_tree_window import SkillTreeWindow
 from game.ui.hud import Hud
 
+from game.game import Game
+
+#TODO: fixes to try for pygbag:
+#- extract pygame_gui 0.6.12 directly to the game folder
+#- write handler using 0.6.9 logic (listen for events)
+
+#TODO: pixelate
+# import sys, platform
+# if sys.platform == "emscripten":
+#     platform.window.canvas.style.imageRendering = "pixelated"
+
 #TODO: save key binds across plays
+#TODO: foothold chain creator
 
 async def main():
-    pygame.init()
+    game = Game()
+    game.setup()
 
-    screen = pygame.display.set_mode((1280, 640))
-    pygame.display.set_caption("Project Bow Flow")
-    manager = pygame_gui.UIManager((1280, 640), "game/assets/theme.json")
-
-    world = World()
-    
-    hud = Hud()
-
-    player_data = PlayerData(
-        skill_binds = {
-            pygame.K_d: "leap",
-            pygame.K_z: "magibolt",
-        },
-        action_binds = {
-            pygame.K_LEFT: "move_left",
-            pygame.K_RIGHT: "move_right",
-            pygame.K_UP: "move_up",
-            pygame.K_DOWN: "move_down",
-            pygame.K_c: "jump",
-            # pygame.K_k: "keys", #TODO: action bindings
-            pygame.K_l: "skills",
-        },
-        skill_allocations={
-            "magibolt": 1
-        },
-        skill_points=100
-    )
-
-    #TODO: foothold chain creator
-    generate_floor(world)
-
-    player_comp = Player(player_data)
-    
-    player = world.create_entity([
-        Position(Vector2(1, 1)),
-        Physics(),
-        Sprite(offset=Vector2(-1/2, -1)),
-        Actor(),
-        HudHooks(hud),
-        KeyBindMonitor(player_data),
-        player_comp,
-    ])
-
-    camera = world.create_entity([
-        Position(),
-        Camera(target=player)
-    ])
-
-    spawn_foothold = world.get_all_components(PlayerSpawn)[0].get_component(Foothold)
-    player.get_component(Physics).move_to_foothold(spawn_foothold)
-
-    skill_tree = SkillTree()
-
-    skill_window = SkillTreeWindow(skill_tree, player_data)
-    
-    camera_comp = camera.get_component(Camera)
-
-    player.get_component(Sprite).set_image("player.png")
-
-    # clock = pygame.time.Clock()
-    last_time = time.time()
-    while True:
-        # time_delta = clock.tick(60)/1000.0
-        screen.fill((200, 255, 200))
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-
-            manager.process_events(event)
-
-        manager.update(DT)
-
-        world.update()
-
-        for renderable in world.get_all_components(Renderable):
-            renderable.render(screen, camera_comp)
-        
-        manager.draw_ui(screen)
-        
-        pygame.display.update()
-        dt = time.time() - last_time
-        last_time = time.time()
-        await asyncio.sleep(DT - dt) #TODO: uncap framerate?
+    await game.run()
 
 asyncio.run(main())
