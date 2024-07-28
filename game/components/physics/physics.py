@@ -1,3 +1,5 @@
+import random
+
 from pygame.math import Vector2
 
 from game.ecs import Component
@@ -18,11 +20,11 @@ class Physics(Component):
         self.foothold_pos = None
         self.stay_on_footholds = False
     
-    def move_to_foothold(self, fh, foothold_pos):
+    def move_to_foothold(self, fh, foothold_pos=None):
         self.foothold = fh
-        self.foothold_pos = foothold_pos
+        self.foothold_pos = foothold_pos if foothold_pos is not None else random.random()
         self.on_ground = True
-        pos = fh.start + (fh.end - fh.end) * foothold_pos
+        pos = fh.start + (fh.end - fh.end) * self.foothold_pos
         self.get_component(Position).set_pos(pos)
 
     def apply_force(self, force):

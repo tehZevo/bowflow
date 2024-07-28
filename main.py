@@ -14,12 +14,12 @@ from game.components.ui import HudHooks
 from game.components.actor import Player, Actor, Monster
 from game.components.key_bind_monitor import KeyBindMonitor
 from game.components.spawner import Spawner
+from game.components.player_spawn import PlayerSpawn
 from game.constants import DT
 from game.data.skill_tree import SkillTree
 from game.data.player_data import PlayerData
-
+from game.map.floor_generator import generate_floor
 from game.ui.skill_tree_window import SkillTreeWindow
-
 from game.ui.hud import Hud
 
 #TODO: save key binds across plays
@@ -55,6 +55,9 @@ async def main():
         skill_points=100
     )
 
+    #TODO: foothold chain creator
+    generate_floor(world)
+
     player_comp = Player(player_data)
     
     player = world.create_entity([
@@ -67,31 +70,13 @@ async def main():
         player_comp,
     ])
 
-    #TODO: foothold chain creator
-    foothold = world.create_entity([
-        Foothold(Vector2(-10, -10), Vector2(30, -10)),
-        Spawner(),
-    ])
-
-    foothold = world.create_entity([
-        Foothold(Vector2(3, -8), Vector2(8, -8)),
-        Spawner(),
-    ])
-
-    foothold = world.create_entity([
-        Foothold(Vector2(12, -6), Vector2(16, -6)),
-        Spawner(),
-    ])
-
-    foothold = world.create_entity([
-        Foothold(Vector2(7, -7), Vector2(12, -9)),
-        Spawner(),
-    ])
-    
     camera = world.create_entity([
         Position(),
         Camera(target=player)
     ])
+
+    spawn_foothold = world.get_all_components(PlayerSpawn)[0].get_component(Foothold)
+    player.get_component(Physics).move_to_foothold(spawn_foothold)
 
     skill_tree = SkillTree()
 
