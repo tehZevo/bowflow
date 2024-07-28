@@ -16,6 +16,7 @@ from game.components.actor import Player, Actor, Monster
 from game.components.key_bind_monitor import KeyBindMonitor
 from game.components.spawner import Spawner
 from game.components.player_spawn import PlayerSpawn
+from game.components.game_master import GameMaster
 from game.constants import DT
 from game.data.skill_tree import SkillTree
 from game.data.player_data import PlayerData
@@ -25,7 +26,7 @@ from game.ui.hud import Hud
 
 class Game:
     def __init__(self):
-        pass
+        self.interrupt_loop = False
     
     def setup(self):
         pygame.init()
@@ -46,6 +47,7 @@ class Game:
                 pygame.K_c: "jump",
                 # pygame.K_k: "keys", #TODO: action bindings
                 pygame.K_l: "skills",
+                pygame.K_SPACE: "interact",
             },
             skill_allocations={
                 "magibolt": 1
@@ -60,9 +62,17 @@ class Game:
         self.hud = Hud()
 
         self.create_new_world()
-    
+
+    #TODO: accept mapdef param
+    def change_map(self):
+        self.interrupt_loop = True
+
     def create_new_world(self):
         self.world = World()
+
+        self.world.create_entity([
+            GameMaster(self)
+        ])
         
         generate_floor(self.world)
 
@@ -89,30 +99,37 @@ class Game:
         self.camera_comp = self.camera.get_component(Camera)
 
     async def run(self):
-        # clock = pygame.time.Clock()
-        last_time = time.time()
         while True:
-            # time_delta = clock.tick(60)/1000.0
-            self.screen.fill((200, 255, 200))
-
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-
-                self.ui_manager.process_events(event)
-
-            self.ui_manager.update(DT)
-
-            self.world.update()
-
-            #TODO: use sprite batches in the future for performance boost
-            for renderable in self.world.get_all_components(Renderable):
-                renderable.render(self.screen, self.camera_comp)
-            
-            self.ui_manager.draw_ui(self.screen)
-            
-            pygame.display.update()
-            dt = time.time() - last_time
+            # clock = pygame.time.Clock()
             last_time = time.time()
-            await asyncio.sleep(DT - dt) #TODO: uncap framerate?
+            while not self.interrupt_loop:
+                # time_delta = clock.tick(60)/1000.0
+                self.screen.fill((200, 255, 200))
+
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        sys.exit()
+
+                    self.ui_manager.process_events(event)
+
+                self.ui_manager.update(DT)
+
+                self.world.update()
+
+                #TODO: use sprite batches in the future for performance boost
+                for renderable in self.world.get_all_components(Renderable):
+                    renderable.render(self.screen, self.camera_comp)
+                
+                self.ui_manager.draw_ui(self.screen)
+                
+                pygame.display.update()
+                dt = time.time() - last_time
+                last_time = time.time()
+                await asyncio.sleep(DT - dt) #TODO: uncap framerate?
+
+            #change maps
+            self.create_new_world()
+            self.interrupt_loop = False
+
+            await asyncio.sleep(0)

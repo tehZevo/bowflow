@@ -6,12 +6,14 @@ from game.data.skill_list import skill_list
 from game.data.exp_calcs import calc_player_exp, skill_points_per_level
 from ..physics.physics import Physics
 from ..physics.position import Position
+from ..interactable import Interactable
 from ..graphics import Sprite
 from ..graphics.level_up_effect import LevelUpEffect
 from .actor import Actor
 from .level_up_listener import LevelUpListener
 from .player_data_listener import PlayerDataListener
 from game.components.key_bind_listener import KeyBindListener
+from game.constants import INTERACT_RADIUS
 
 class Player(Component, LevelUpListener, KeyBindListener):
     def __init__(self, player_data):
@@ -21,7 +23,16 @@ class Player(Component, LevelUpListener, KeyBindListener):
     
     def init(self):
         self.get_component(Sprite).set_image("player.png")
-        
+    
+    def attempt_interact(self):
+        my_pos = self.get_component(Position).pos
+        for interactable in self.world.get_all_components(Interactable):
+            other_pos = interactable.get_component(Position).pos
+            dist = my_pos.distance_to(other_pos)
+            if dist < INTERACT_RADIUS:
+                interactable.on_interact(self.entity)
+                break
+
     def on_key_binds(self, actions, skills):
         phys = self.get_component(Physics)
         actor = self.get_component(Actor)
@@ -34,6 +45,9 @@ class Player(Component, LevelUpListener, KeyBindListener):
 
         if phys.on_ground and "jump" in actions:
             actor.act(Jump(0.15))
+        
+        if phys.on_ground and "interact" in actions:
+            self.attempt_interact()
     
     def on_level_up(self, level):
         #TODO: screen wipe on level up would be cool

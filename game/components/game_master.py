@@ -7,7 +7,3 @@ class GameMaster(Component):
         super().__init__()
         
         self.game = game
-    
-    #TODO: accept mapdef
-    def change_map(self):
-        
