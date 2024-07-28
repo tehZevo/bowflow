@@ -50,14 +50,15 @@ class Game:
                 pygame.K_SPACE: "interact",
             },
             skill_allocations={
-                "magibolt": 1
+                "magibolt": 1,
+                "leap": 1,
             },
             skill_points=100
         )
 
         self.skill_tree = SkillTree()
 
-        skill_window = SkillTreeWindow(self.skill_tree, self.player_data)
+        #skill_window = SkillTreeWindow(self.skill_tree, self.player_data)
 
         self.hud = Hud()
 
@@ -104,7 +105,7 @@ class Game:
             last_time = time.time()
             while not self.interrupt_loop:
                 # time_delta = clock.tick(60)/1000.0
-                self.screen.fill((200, 255, 200))
+                self.screen.fill((200, 200, 200))
 
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:

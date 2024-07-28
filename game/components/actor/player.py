@@ -1,11 +1,9 @@
 from pygame.math import Vector2
 
 from game.ecs import Component
-from game.actions import Move, Jump
-from game.data.skill_list import skill_list
-from game.data.exp_calcs import calc_player_exp, skill_points_per_level
 from ..physics.physics import Physics
 from ..physics.position import Position
+from ..physics.rope import Rope
 from ..interactable import Interactable
 from ..graphics import Sprite
 from ..graphics.level_up_effect import LevelUpEffect
@@ -13,7 +11,10 @@ from .actor import Actor
 from .level_up_listener import LevelUpListener
 from .player_data_listener import PlayerDataListener
 from game.components.key_bind_listener import KeyBindListener
-from game.constants import INTERACT_RADIUS
+from game.actions import Move, Jump
+from game.data.skill_list import skill_list
+from game.data.exp_calcs import calc_player_exp, skill_points_per_level
+from game.constants import INTERACT_RADIUS, ROPE_GRAB_DISTANCE
 
 class Player(Component, LevelUpListener, KeyBindListener):
     def __init__(self, player_data):
@@ -35,6 +36,7 @@ class Player(Component, LevelUpListener, KeyBindListener):
 
     def on_key_binds(self, actions, skills):
         phys = self.get_component(Physics)
+        pos = self.get_component(Position)
         actor = self.get_component(Actor)
 
         if len(skills) > 0:
@@ -43,6 +45,11 @@ class Player(Component, LevelUpListener, KeyBindListener):
         
         self.move_dir = ("move_right" in actions) - ("move_left" in actions)
 
+        if "move_up" in actions:
+            for rope in self.world.get_all_components(Rope):
+                if distance_to_segment(pos.pos, role.top, rope.bottom) < ROPE_GRAB_DISTANCE:
+                    phys.grab_rope(rope)
+                    
         if phys.on_ground and "jump" in actions:
             actor.act(Jump(0.15))
         

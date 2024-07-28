@@ -7,6 +7,7 @@ from game.utils import intersect, project_onto_foothold
 from game.constants import GRAVITY, GROUND_FRICTION, AIR_FRICTION
 from .position import Position
 from .foothold import Foothold
+from .wall import Wall
 
 class Physics(Component):
     def __init__(self):
@@ -30,6 +31,8 @@ class Physics(Component):
     def apply_force(self, force):
         self.force = self.force + force
 
+    #TODO: move all update funcs to their own "PhysicsState" classes
+    
     def air_update(self):
         pos = self.get_component(Position)
         self.apply_force(Vector2(0, GRAVITY))
@@ -39,6 +42,23 @@ class Physics(Component):
 
         self.force = Vector2()
 
+        for wall in self.world.get_all_components(Wall):
+            intersection_pos = intersect(wall.start, wall.end, pos.pos, pos.pos + self.vel)
+            if intersection_pos is None:
+                continue
+            
+            #TODO: do we need to modify velocity's length?
+            #TODO: maybe we need to keep a "delta_pos" vector and manipulate that through wall and fh logic
+            if wall.direction == 0 \
+                or (wall.direction == 1 and self.vel.x <= 0) \
+                or (wall.direction == -1 and self.vel.x >= 0):
+                wall_dir = (wall.end - wall.start).normalize()
+                #project vel onto wall
+                vel_projected = self.vel.project(wall_dir)
+                self.vel = vel_projected
+                #TODO: yeah need to subtract vel since we already moved some
+                pos.set_pos(intersection_pos)
+
         footholds = self.world.get_all_components(Foothold)
 
         if self.vel.y <= 0:
@@ -46,15 +66,17 @@ class Physics(Component):
             for fh in footholds:
                 #TODO: multiply vel by fixed DT offset? right now its per-frame movement
                 intersection_pos = intersect(fh.start, fh.end, pos.pos, pos.pos + self.vel)
-                if intersection_pos is not None:
-                    fh_t = project_onto_foothold(intersection_pos, fh.start, fh.end)
-                    fh_pos = fh.start + (fh.end - fh.start) * fh_t
+                if intersection_pos is None:
+                    continue
+                
+                fh_t = project_onto_foothold(intersection_pos, fh.start, fh.end)
+                fh_pos = fh.start + (fh.end - fh.start) * fh_t
 
-                    self.on_ground = True
-                    self.foothold = fh
-                    self.foothold_pos = fh_t
-                    pos.set_pos(fh_pos)
-
+                self.on_ground = True
+                self.foothold = fh
+                self.foothold_pos = fh_t
+                pos.set_pos(fh_pos)
+        
         pos.set_pos(pos.pos + self.vel)
         self.vel = self.vel * (1 - AIR_FRICTION)
 
@@ -62,19 +84,44 @@ class Physics(Component):
         self.on_ground = False
         self.foothold = None
         self.foothold_pos = 0
+    
+    def grab_rope(self, rope):
+        pos = self.get_component(Position).pos
+        pos_on_rope = (pos - rope.top).project(rope.bottom - rope.top)
+        rope_pos = project_onto_foothold(pos_on_rope, rope.bottom, rope.top)
+        #TODO: just change state
+        self.on_rope = True
+        self.on_ground = False
 
     def ground_update(self):
         pos = self.get_component(Position)
 
         #TODO: if force is large enough, dislodge from ground?
+        #TODO: when falling onto FH, project vel onto FH so you "slide down" as you land
 
         self.vel = self.vel + self.force
         self.vel.y = 0
         self.force = Vector2()
+
+        #TODO: beware, this isnt exactly correct since FH uses vel to mean left/right walking speed
+        for wall in self.world.get_all_components(Wall):
+            intersection_pos = intersect(wall.start, wall.end, pos.pos, pos.pos + self.vel)
+            if intersection_pos is None:
+                continue
+            
+            #TODO: do we need to modify velocity's length?
+            #TODO: maybe we need to keep a "delta_pos" vector and manipulate that through wall and fh logic
+            if wall.direction == 0 \
+                or (wall.direction == 1 and self.vel.x <= 0) \
+                or (wall.direction == -1 and self.vel.x >= 0):
+                #instead of projecting, just stop for now..
+                # we would need extra logic for if an angled wall "lifts" the player off a FH..
+                self.vel.x = 0
+                #TODO: set fh position to wall position
         
         fh_width = self.foothold.end.x - self.foothold.start.x
         fh_speed = (self.foothold.end - self.foothold.start).length() / fh_width #TODO: beware div by 0 with vertical footholds
-
+        
         self.foothold_pos = self.foothold_pos + self.vel.x / fh_width * fh_speed
 
         fh_pos = self.foothold.start + (self.foothold.end - self.foothold.start) * self.foothold_pos

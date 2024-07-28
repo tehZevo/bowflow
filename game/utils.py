@@ -8,6 +8,11 @@ def round_sigfigs(x, figs):
 def point_in_aabb(point, min, max):
     return point.x >= min.x and point.x < max.x and point.y >= min.y and point.y < max.y
 
+def distance_to_segment(p, start, end):
+    proj = (p - start).project(end - start)
+    dist = proj.distance_to(p)
+    return dist
+
 def intersect(p1, p2, p3, p4):
     denom = (p4.y - p3.y) * (p2.x - p1.x) - (p4.x - p3.x) * (p2.y-p1.y)
     if denom == 0:

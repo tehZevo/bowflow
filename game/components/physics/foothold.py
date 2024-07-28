@@ -11,6 +11,7 @@ class Foothold(Renderable):
         self.end = end
         self.prev = prev
         self.next = next
+        #TODO: parameter for allowing jump down or not
     
     def calc_position(self, foothold_pos):
         return self.start + (self.end - self.start) * foothold_pos
@@ -21,6 +22,7 @@ class Foothold(Renderable):
         
         start = camera.to_screen(self.start)
         end = camera.to_screen(self.end)
-        pygame.draw.line(screen, (255, 0, 0), start, end)
-        pygame.draw.circle(screen, (255, 0, 0), start, 3, width=0)
-        pygame.draw.circle(screen, (255, 0, 0), end, 3, width=0)
+        #TODO: if has prev/next, fill in circle, else leave empty
+        pygame.draw.line(screen, (0, 0, 255), start, end)
+        pygame.draw.circle(screen, (0, 0, 255), start, 8, width=0)
+        pygame.draw.circle(screen, (0, 0, 255), end, 8, width=0)

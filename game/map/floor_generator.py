@@ -8,6 +8,8 @@ from game.components.spawner import Spawner
 from game.components.portal import Portal
 from game.components.physics.position import Position
 from game.components.graphics.sprite import Sprite
+from game.components.physics.wall import Wall
+from game.components.physics.rope import Rope
 
 def generate_floor(world):
     foothold = world.create_entity([
@@ -30,6 +32,14 @@ def generate_floor(world):
     foothold = world.create_entity([
         Foothold(Vector2(7, -7), Vector2(12, -9)),
         Spawner(),
+    ])
+
+    wall = world.create_entity([
+        Wall(Vector2(-2, -7), Vector2(-2, -12), 1)
+    ])
+
+    rope = world.create_entity([
+        Rope(Vector2(14, -6), 3)
     ])
 
     portal = world.create_entity([
