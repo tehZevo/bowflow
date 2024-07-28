@@ -12,6 +12,9 @@ class Foothold(Renderable):
         self.prev = prev
         self.next = next
     
+    def calc_position(self, foothold_pos):
+        return self.start + (self.end - self.start) * foothold_pos
+
     def render(self, screen, camera=None):
         if camera is None:
             return
