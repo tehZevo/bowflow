@@ -1,5 +1,5 @@
+from game.skilleffects.leap_effect import LeapEffect
 from .skilldef import SkillDef
-from ..skilleffects import LeapEffect
 
 def scaling(ratio):
     return [LeapEffect()]

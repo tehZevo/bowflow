@@ -1,7 +1,7 @@
 import pygame
 
+from game.constants import PPU, DT
 from .renderable import Renderable
-from ..constants import PPU, DT
 
 class DebugBox(Renderable):
     def __init__(self, min, max, color=(255, 0, 0), alpha=64, time=1):

@@ -1,11 +1,11 @@
 import pygame
 
-from ..ecs.component import Component
-from ..data.stats import Stats
+from game.ecs import Component
+from game.data.stats import Stats
+from ..physics.physics import Physics
 from .damage_listener import DamageListener
 from .death_listener import DeathListener
 from .stats_listener import StatsListener
-from .physics import Physics
 
 class Actor(Component):
     def __init__(self):
@@ -35,7 +35,7 @@ class Actor(Component):
         self.action = None
 
     def use_skill(self, skilldef, level=1, override_direction=None):
-        from ..actions.useskill import UseSkill
+        from game.actions.useskill import UseSkill
 
         #ground/air checks
         phys = self.get_component(Physics)

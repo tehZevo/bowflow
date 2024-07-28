@@ -1,10 +1,9 @@
-import pygame
 from pygame.math import Vector2
 
-from ..ecs.component import Component
+from game.ecs import Component
 from .sprite import Sprite
 
-from ..constants import DT, PPU
+from game.constants import DT, PPU
 
 class Effect(Component):
     def __init__(self, effect_path=None, time=1):

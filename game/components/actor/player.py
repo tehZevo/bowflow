@@ -1,16 +1,16 @@
 from pygame.math import Vector2
 
-from ..ecs.component import Component
-from .physics import Physics
+from game.ecs import Component
+from game.actions import Move, Jump
+from game.data.skill_list import skill_list
+from game.data.exp_calcs import calc_player_exp, skill_points_per_level
+from ..physics.physics import Physics
+from ..physics.position import Position
+from ..graphics.level_up_effect import LevelUpEffect
 from .actor import Actor
-from .position import Position
 from .level_up_listener import LevelUpListener
 from .player_data_listener import PlayerDataListener
-from .level_up_effect import LevelUpEffect
-from ..actions import Move, Jump
-from ..data.skill_list import skill_list
-from ..data.exp_calcs import calc_player_exp, skill_points_per_level
-from .key_bind_listener import KeyBindListener
+from game.components.key_bind_listener import KeyBindListener
 
 class Player(Component, LevelUpListener, KeyBindListener):
     def __init__(self, player_data):

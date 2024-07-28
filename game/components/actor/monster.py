@@ -1,13 +1,13 @@
 import random
 
-from ..ecs.component import Component
+from game.ecs import Component
+from game.actions import Move
+from game.data.exp_calcs import calc_mob_exp
+from ..physics.physics import Physics
+from ..physics.position import Position
 from .actor import Actor
-from .physics import Physics
-from .position import Position
-from ..actions import Move
 from .damage_listener import DamageListener
 from .death_listener import DeathListener
-from ..data.exp_calcs import calc_mob_exp
 
 class Monster(Component, DamageListener, DeathListener):
     def __init__(self):

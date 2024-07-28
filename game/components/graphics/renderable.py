@@ -1,4 +1,4 @@
-from ..ecs.component import Component
+from game.ecs import Component
 
 class Renderable(Component):
     def __init__(self):

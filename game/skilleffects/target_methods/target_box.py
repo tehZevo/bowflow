@@ -1,12 +1,12 @@
 import pygame
 from pygame.math import Vector2
 
-from ...components.position import Position
-from ...components.monster import Monster
-from ...components.actor import Actor
-from ...components.debug_box import DebugBox
-from ...utils import point_in_aabb
-from ...constants import PPU
+from game.components.physics.position import Position
+from game.components.actor.monster import Monster
+from game.components.actor.actor import Actor
+from game.components.graphics.debug_box import DebugBox
+from game.utils import point_in_aabb
+from game.constants import PPU
 
 from .target_method import TargetMethod
 

@@ -1,7 +1,7 @@
 import pygame
 from pygame.math import Vector2
 
-from .renderable import Renderable
+from ..graphics import Renderable
 
 class Foothold(Renderable):
     def __init__(self, start, end, prev=None, next=None):

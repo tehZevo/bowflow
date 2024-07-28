@@ -1,9 +1,8 @@
-import pygame
 from pygame.math import Vector2
 
-from ..ecs.component import Component
+from game.ecs import Component
+from ..physics.position import Position
 from .effect import Effect
-from .position import Position
 from .sprite import Sprite
 
 class LevelUpEffect(Component):

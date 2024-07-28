@@ -1,9 +1,9 @@
 import pygame
 from pygame.math import Vector2
 
+from game.constants import PPU
+from ..physics.position import Position
 from .renderable import Renderable
-from .position import Position
-from ..constants import PPU
 
 class Sprite(Renderable):
     def __init__(self, image_path=None, offset=None):

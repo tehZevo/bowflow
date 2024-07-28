@@ -8,7 +8,11 @@ import pygame_gui
 import i18n
 
 from game.ecs import World
-from game.components import Physics, Player, Position, Sprite, Renderable, Foothold, Camera, Actor, Monster, HudHooks, KeyBindMonitor
+from game.components.physics import Physics, Position, Foothold
+from game.components.graphics import Sprite, Renderable, Camera
+from game.components.ui import HudHooks
+from game.components.actor import Player, Actor, Monster
+from game.components.key_bind_monitor import KeyBindMonitor
 from game.constants import DT
 from game.data.skill_tree import SkillTree
 from game.data.player_data import PlayerData

@@ -2,11 +2,11 @@ import pygame
 from pygame.math import Vector2
 
 from .skilleffect import SkillEffect
-from ..components.position import Position
-from ..components.monster import Monster
-from ..components.actor import Actor
-from ..utils import point_in_aabb
-from ..components.skill import Skill
+from game.components.physics.position import Position
+from game.components.actor.monster import Monster
+from game.components.actor.actor import Actor
+from game.utils import point_in_aabb
+from game.components.skill import Skill
 
 from ..constants import DEBUG_TARGETS
 

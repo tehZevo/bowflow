@@ -1,7 +1,7 @@
 import pygame
 
-from ..ecs import Component
-from .position import Position
+from game.ecs import Component
+from .physics.position import Position
 
 class Skill(Component):
     """

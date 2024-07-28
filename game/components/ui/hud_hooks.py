@@ -1,11 +1,11 @@
-from ..ecs.component import Component
-from .damage_listener import DamageListener
-from .death_listener import DeathListener
-from .stats_listener import StatsListener
-from .level_up_listener import LevelUpListener
-from .player_data_listener import PlayerDataListener
+from game.ecs import Component
+from ..actor.damage_listener import DamageListener
+from ..actor.death_listener import DeathListener
+from ..actor.stats_listener import StatsListener
+from ..actor.level_up_listener import LevelUpListener
+from ..actor.player_data_listener import PlayerDataListener
 
-from ..data.exp_calcs import calc_player_exp
+from game.data.exp_calcs import calc_player_exp
 
 class HudHooks(Component, DamageListener, DeathListener, StatsListener, LevelUpListener, PlayerDataListener):
     def __init__(self, hud):

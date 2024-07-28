@@ -1,8 +1,8 @@
 from pygame.math import Vector2
 
-from ..ecs.component import Component
-from .position import Position
+from game.ecs import Component
 from game.constants import PPU
+from ..physics.position import Position
 
 class Camera(Component):
     def __init__(self, target=None, speed=0.1):

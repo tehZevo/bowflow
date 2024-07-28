@@ -1,7 +1,7 @@
 import pygame
 from pygame.math import Vector2
 
-from ..ecs.component import Component
+from game.ecs import Component
 from .key_bind_listener import KeyBindListener
 
 def pressed_binds(bind_map):

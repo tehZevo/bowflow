@@ -2,7 +2,7 @@ import pygame
 from pygame.math import Vector2
 
 from .action import Action
-from ..components import Physics
+from game.components.physics.physics import Physics
 
 class Jump(Action):
     def __init__(self, power):

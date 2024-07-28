@@ -1,6 +1,6 @@
 from pygame.math import Vector2
 
-from ..ecs.component import Component
+from game.ecs import Component
 
 class Position(Component):
     def __init__(self, pos=None):

@@ -1,10 +1,10 @@
 from pygame.math import Vector2
 
-from ..ecs.component import Component
+from game.ecs import Component
+from game.utils import intersect, project_onto_foothold
+from game.constants import GRAVITY, GROUND_FRICTION, AIR_FRICTION
 from .position import Position
 from .foothold import Foothold
-from ..utils import intersect, project_onto_foothold
-from ..constants import GRAVITY, GROUND_FRICTION, AIR_FRICTION
 
 class Physics(Component):
     def __init__(self):

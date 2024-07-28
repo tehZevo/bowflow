@@ -2,8 +2,8 @@ import pygame
 from pygame.math import Vector2
 
 from .skilleffect import SkillEffect
-from ..components.physics import Physics
-from ..components.actor import Actor
+from game.components.physics.physics import Physics
+from game.components.actor.actor import Actor
 
 class LeapEffect(SkillEffect):
     def __init__(self):
