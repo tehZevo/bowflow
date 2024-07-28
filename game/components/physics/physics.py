@@ -1,3 +1,4 @@
+#TODO: clean up imports
 import random
 
 from pygame.math import Vector2
@@ -8,141 +9,63 @@ from game.constants import GRAVITY, GROUND_FRICTION, AIR_FRICTION
 from .position import Position
 from .foothold import Foothold
 from .wall import Wall
+from .physics_states.air_state import AirState
+from .physics_states.ground_state import GroundState
+from .physics_states.rope_state import RopeState
 
 class Physics(Component):
     def __init__(self):
         super().__init__()
 
-        self.vel = Vector2()
-        self.force = Vector2()
-
-        self.on_ground = False
-        self.foothold = None
-        self.foothold_pos = None
+        self.state = AirState(self)
+        
         self.stay_on_footholds = False
     
+    @property
+    def on_ground(self):
+        return type(self.state) == GroundState
+    
+    @property
+    def in_air(self):
+        return type(self.state) == AirState
+    
+    @property
+    def on_rope(self):
+        return type(self.state) == RopeState
+
+    #TODO: change this so if no pos provided, projects position onto foothold
     def move_to_foothold(self, fh, foothold_pos=None):
-        self.foothold = fh
-        self.foothold_pos = foothold_pos if foothold_pos is not None else random.random()
-        self.on_ground = True
-        pos = fh.start + (fh.end - fh.end) * self.foothold_pos
-        self.get_component(Position).set_pos(pos)
+        #TODO: enter a ground state
+        self.state = GroundState(self)
+        self.state.foothold = fh
+        self.state.foothold_pos = foothold_pos if foothold_pos is not None else random.random()
+        self.state.update_pos()
 
     def apply_force(self, force):
-        self.force = self.force + force
+        match self.state:
+            case AirState():
+                self.state.force += force
+            case GroundState():
+                self.state.force += force.x
 
-    #TODO: move all update funcs to their own "PhysicsState" classes
-    
-    def air_update(self):
-        pos = self.get_component(Position)
-        self.apply_force(Vector2(0, GRAVITY))
+    def dislodge(self, keep_vel=True):
+        """Detatch from foothold"""
+        if not self.on_ground:
+            return
 
-        #TODO: mass?
-        self.vel = self.vel + self.force
-
-        self.force = Vector2()
-
-        for wall in self.world.get_all_components(Wall):
-            intersection_pos = intersect(wall.start, wall.end, pos.pos, pos.pos + self.vel)
-            if intersection_pos is None:
-                continue
-            
-            #TODO: do we need to modify velocity's length?
-            #TODO: maybe we need to keep a "delta_pos" vector and manipulate that through wall and fh logic
-            if wall.direction == 0 \
-                or (wall.direction == 1 and self.vel.x <= 0) \
-                or (wall.direction == -1 and self.vel.x >= 0):
-                wall_dir = (wall.end - wall.start).normalize()
-                #project vel onto wall
-                vel_projected = self.vel.project(wall_dir)
-                self.vel = vel_projected
-                #TODO: yeah need to subtract vel since we already moved some
-                pos.set_pos(intersection_pos)
-
-        footholds = self.world.get_all_components(Foothold)
-
-        if self.vel.y <= 0:
-            #TODO: find first collision in direction instead of first based on iteration order
-            for fh in footholds:
-                #TODO: multiply vel by fixed DT offset? right now its per-frame movement
-                intersection_pos = intersect(fh.start, fh.end, pos.pos, pos.pos + self.vel)
-                if intersection_pos is None:
-                    continue
-                
-                fh_t = project_onto_foothold(intersection_pos, fh.start, fh.end)
-                fh_pos = fh.start + (fh.end - fh.start) * fh_t
-
-                self.on_ground = True
-                self.foothold = fh
-                self.foothold_pos = fh_t
-                pos.set_pos(fh_pos)
-        
-        pos.set_pos(pos.pos + self.vel)
-        self.vel = self.vel * (1 - AIR_FRICTION)
-
-    def dislodge(self):
-        self.on_ground = False
-        self.foothold = None
-        self.foothold_pos = 0
+        vel = Vector2()
+        if keep_vel:
+            vel = Vector2(self.state.vel, 0)
+        self.state = AirState(self)
+        self.state.vel = vel
     
     def grab_rope(self, rope):
+        #TODO: move to a rope state
         pos = self.get_component(Position).pos
         pos_on_rope = (pos - rope.top).project(rope.bottom - rope.top)
         rope_pos = project_onto_foothold(pos_on_rope, rope.bottom, rope.top)
-        #TODO: just change state
-        self.on_rope = True
-        self.on_ground = False
-
-    def ground_update(self):
-        pos = self.get_component(Position)
-
-        #TODO: if force is large enough, dislodge from ground?
-        #TODO: when falling onto FH, project vel onto FH so you "slide down" as you land
-
-        self.vel = self.vel + self.force
-        self.vel.y = 0
-        self.force = Vector2()
-
-        #TODO: beware, this isnt exactly correct since FH uses vel to mean left/right walking speed
-        for wall in self.world.get_all_components(Wall):
-            intersection_pos = intersect(wall.start, wall.end, pos.pos, pos.pos + self.vel)
-            if intersection_pos is None:
-                continue
-            
-            #TODO: do we need to modify velocity's length?
-            #TODO: maybe we need to keep a "delta_pos" vector and manipulate that through wall and fh logic
-            if wall.direction == 0 \
-                or (wall.direction == 1 and self.vel.x <= 0) \
-                or (wall.direction == -1 and self.vel.x >= 0):
-                #instead of projecting, just stop for now..
-                # we would need extra logic for if an angled wall "lifts" the player off a FH..
-                self.vel.x = 0
-                #TODO: set fh position to wall position
-        
-        fh_width = self.foothold.end.x - self.foothold.start.x
-        fh_speed = (self.foothold.end - self.foothold.start).length() / fh_width #TODO: beware div by 0 with vertical footholds
-        
-        self.foothold_pos = self.foothold_pos + self.vel.x / fh_width * fh_speed
-
-        fh_pos = self.foothold.start + (self.foothold.end - self.foothold.start) * self.foothold_pos
-        pos.set_pos(fh_pos)
-
-        self.vel = self.vel * (1 - GROUND_FRICTION)
-
-        if self.stay_on_footholds:
-            self.foothold_pos = max(0, min(1, self.foothold_pos))
-            
-        #TODO: move to prev/next foothold if any, else dislodge
-        if self.foothold_pos < 0 or self.foothold_pos > 1:
-            self.dislodge()
-            return
 
     def update(self):
-        if not self.on_ground:
-            self.air_update()
-        
-        #TODO: should i elif this?
-        if self.on_ground:
-            self.ground_update()
-            
+        #TODO: allow transitioning between multiple states per frame?
+        self.state.update()
         

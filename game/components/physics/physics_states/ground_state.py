@@ -1,8 +1,67 @@
+#TODO: clean up imports
 from .physics_state import PhysicsState
+
+import random
+
+from pygame.math import Vector2
+
+from game.ecs import Component
+from game.utils import intersect, project_onto_foothold
+from game.constants import GRAVITY, GROUND_FRICTION, AIR_FRICTION
+from ..position import Position
+from ..foothold import Foothold
+from ..wall import Wall
 
 class GroundState(PhysicsState):
     def __init__(self, physics):
         super().__init__(physics)
+        self.vel = 0
+        self.force = 0
+
+        self.foothold = None
+        self.foothold_pos = None
     
+    def update_pos(self):
+        pos = self.foothold.start + (self.foothold.end - self.foothold.start) * self.foothold_pos
+        self.physics.get_component(Position).set_pos(pos)
+
     def update(self):
-        raise NotImplementedError
+        pos = self.physics.get_component(Position)
+
+        #TODO: if force is large enough, dislodge from ground?
+        #TODO: when falling onto FH, project vel onto FH so you "slide down" as you land
+
+        self.vel = self.vel + self.force
+        self.force = 0
+
+        #TODO: beware, this isnt exactly correct since FH uses vel to mean left/right walking speed
+        for wall in self.physics.world.get_all_components(Wall):
+            intersection_pos = intersect(wall.start, wall.end, pos.pos, pos.pos + Vector2(self.vel, 0))
+            if intersection_pos is None:
+                continue
+            
+            #TODO: do we need to modify velocity's length?
+            #TODO: maybe we need to keep a "delta_pos" vector and manipulate that through wall and fh logic
+            if wall.direction == 0 \
+                or (wall.direction == 1 and self.vel <= 0) \
+                or (wall.direction == -1 and self.vel >= 0):
+                #instead of projecting, just stop for now..
+                # we would need extra logic for if an angled wall "lifts" the player off a FH..
+                self.vel = 0
+                #TODO: set fh position to wall position
+        
+        fh_width = self.foothold.end.x - self.foothold.start.x
+        fh_speed = (self.foothold.end - self.foothold.start).length() / fh_width #TODO: beware div by 0 with vertical footholds
+        
+        self.foothold_pos = self.foothold_pos + self.vel / fh_width * fh_speed
+
+        self.update_pos()
+
+        self.vel = self.vel * (1 - GROUND_FRICTION)
+
+        if self.physics.stay_on_footholds:
+            self.foothold_pos = max(0, min(1, self.foothold_pos))
+            
+        #TODO: move to prev/next foothold if any, else dislodge
+        if self.foothold_pos < 0 or self.foothold_pos > 1:
+            self.physics.dislodge()

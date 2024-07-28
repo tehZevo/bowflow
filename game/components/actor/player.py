@@ -15,6 +15,7 @@ from game.actions import Move, Jump
 from game.data.skill_list import skill_list
 from game.data.exp_calcs import calc_player_exp, skill_points_per_level
 from game.constants import INTERACT_RADIUS, ROPE_GRAB_DISTANCE
+from game.components.physics.physics_states.ground_state import GroundState
 
 class Player(Component, LevelUpListener, KeyBindListener):
     def __init__(self, player_data):
