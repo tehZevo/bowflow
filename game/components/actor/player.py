@@ -61,6 +61,10 @@ class Player(Component, LevelUpListener, KeyBindListener):
             self.rope_regrab_delay = ROPE_REGRAB_DELAY
             actor.act(JumpOffRope(self.move_dir))
         
+        if phys.on_rope and "jump" in actions and self.climb_dir > 0:
+            print("ascend")
+            self.use_skill("ascend", self.move_dir)
+        
         if phys.on_ground and "interact" in actions:
             self.attempt_interact()
         
@@ -125,7 +129,6 @@ class Player(Component, LevelUpListener, KeyBindListener):
             actor.act(Move(self.move_dir / 1000))
 
         if phys.on_rope and self.climb_dir != 0:
-            print(self.climb_dir, "climb dir")
             actor.act(Climb(self.climb_dir))
 
         #TODO: make rope grab logic in air based on intersection, but on ground, based on distance

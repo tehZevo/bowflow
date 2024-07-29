@@ -52,6 +52,7 @@ class Game:
             skill_allocations={
                 "magibolt": 1,
                 "leap": 1,
+                "ascend": 1,
             },
             skill_points=100
         )

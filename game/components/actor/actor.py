@@ -28,7 +28,8 @@ class Actor(Component):
         
     def begin_action(self, action):
         self.action = action
-        action.start(self.entity)
+        if self.action is not None:
+            action.start(self.entity)
 
     def end_action(self):
         self.action.end(self.entity)
@@ -39,9 +40,11 @@ class Actor(Component):
 
         #ground/air checks
         phys = self.get_component(Physics)
-        if not skilldef.in_air and not phys.on_ground:
+        if not skilldef.in_air and phys.in_air:
             return
         if not skilldef.on_ground and phys.on_ground:
+            return
+        if not skilldef.on_rope and phys.on_rope:
             return
         
         dir = override_direction if override_direction is not None else self.facing_dir

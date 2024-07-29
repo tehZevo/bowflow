@@ -10,6 +10,8 @@ class LeapEffect(SkillEffect):
         super().__init__()
     
     def start(self, skill):
+        skill.done = True
+        
         phys = skill.caster.get_component(Physics)
         #skill should only be castable midair, but this is an extra sanity check since we are messing with air velocity
         if not phys.in_air:
@@ -22,5 +24,3 @@ class LeapEffect(SkillEffect):
         phys.state.vel.x = 0
         
         phys.apply_force(Vector2(actor.facing_dir / 6, 0.05))
-
-        skill.done = True

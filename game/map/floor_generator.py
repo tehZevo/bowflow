@@ -11,6 +11,24 @@ from game.components.graphics.sprite import Sprite
 from game.components.physics.wall import Wall
 from game.components.physics.rope import Rope
 
+#TODO: function for spawners
+def foothold_stack(world, start_pos, width, height, n_platforms=2, ropes=2):
+    diff = height / n_platforms
+    for i in range(n_platforms):
+        start = start_pos + Vector2(0, diff * i)
+        end = start + Vector2(width, 0)
+
+        foothold = world.create_entity([Foothold(start, end)])
+        
+        if i == 0:
+            continue
+
+        for _ in range(ropes):
+            rope_pos = start + (end - start) * random.random()
+            rope_length = diff / 2 + diff / 2 * random.random()
+            rope = world.create_entity([Rope(rope_pos, rope_length)])
+
+#TODO: rename map generator
 def generate_floor(world):
     foothold = world.create_entity([
         Foothold(Vector2(-10, -10), Vector2(30, -10)),
@@ -47,6 +65,8 @@ def generate_floor(world):
         Sprite(),
         Portal(),
     ])
+
+    foothold_stack(world, Vector2(-2, -5), 20, 20, 5, 2)
 
     portal_pos = foothold.get_component(Foothold).calc_position(random.random()) + Vector2(0, 1)
     portal.get_component(Position).set_pos(portal_pos)

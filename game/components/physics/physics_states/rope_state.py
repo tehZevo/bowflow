@@ -1,3 +1,5 @@
+from pygame.math import Vector2
+
 from ..position import Position
 from .physics_state import PhysicsState
 
@@ -20,11 +22,12 @@ class RopeState(PhysicsState):
         rope_length = abs(self.rope.top.y - self.rope.bottom.y)
         
         #TODO: check math
-        print(self.vel)
         self.rope_pos = self.rope_pos + self.vel / rope_length
-        self.vel = 0
 
         self.update_pos()
 
         if self.rope_pos > 1 or self.rope_pos < 0:
             self.physics.drop_from_rope()
+            self.physics.state.vel = Vector2(0, self.vel)
+            
+        self.vel = 0
