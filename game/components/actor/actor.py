@@ -6,8 +6,9 @@ from ..physics.physics import Physics
 from .damage_listener import DamageListener
 from .death_listener import DeathListener
 from .stats_listener import StatsListener
+from ..physics.physics_state_listener import PhysicsStateListener
 
-class Actor(Component):
+class Actor(Component, PhysicsStateListener):
     def __init__(self):
         super().__init__()
 
@@ -17,6 +18,11 @@ class Actor(Component):
 
         self.stats = Stats(hp=100, mp=100)
     
+    def on_physics_state_changed(self, state):
+        #cancel current action when entering rope state
+        if state.physics.on_rope:
+            self.act(None, force=True)
+
     def damage(self, amount, source=None):
         self.stats.hp -= amount
 

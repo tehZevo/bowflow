@@ -56,6 +56,7 @@ class AirState(PhysicsState):
                 
                 #enter grounded state
                 self.physics.move_to_foothold(fh, fh_t)
+                #TODO: this info wont be included in state update...
                 self.physics.state.vel = self.vel.x
         
         pos.set_pos(pos.pos + self.vel)

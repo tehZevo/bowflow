@@ -9,6 +9,7 @@ from game.constants import GRAVITY, GROUND_FRICTION, AIR_FRICTION
 from .position import Position
 from .foothold import Foothold
 from .wall import Wall
+from .physics_state_listener import PhysicsStateListener
 from .physics_states.air_state import AirState
 from .physics_states.ground_state import GroundState
 from .physics_states.rope_state import RopeState
@@ -41,6 +42,12 @@ class Physics(Component):
         self.state.foothold_pos = foothold_pos if foothold_pos is not None else random.random()
         self.state.update_pos()
 
+        self.alert_listeners()
+
+    def alert_listeners(self):
+        for listener in self.entity.get_all_components(PhysicsStateListener):
+            listener.on_physics_state_changed(self.state)
+
     def apply_force(self, force):
         match self.state:
             case AirState():
@@ -60,6 +67,8 @@ class Physics(Component):
             vel = Vector2(self.state.vel, 0)
         self.state = AirState(self)
         self.state.vel = vel
+
+        self.alert_listeners()
     
     def grab_rope(self, rope):
         self.state = RopeState(self)
@@ -67,11 +76,15 @@ class Physics(Component):
         rope_pos = (pos - rope.bottom).dot(rope.top - rope.bottom) / (rope.top - rope.bottom).length_squared()
         self.state.rope = rope
         self.state.rope_pos = rope_pos
+
+        self.alert_listeners()
     
     def drop_from_rope(self, direction=0):
         vel = Vector2() if direction == 0 else Vector2(direction, 1.5) / 15 #TODO: test vel
         self.state = AirState(self)
         self.state.vel = vel
+
+        self.alert_listeners()
 
     def update(self):
         #TODO: allow transitioning between multiple states per frame?

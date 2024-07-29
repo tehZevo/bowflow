@@ -123,7 +123,7 @@ class Player(Component, LevelUpListener, KeyBindListener):
         phys = self.get_component(Physics)
 
         if phys.on_ground and self.move_dir != 0:
-            actor.act(Move(self.move_dir / 100))
+            actor.act(Move(self.move_dir / 150))
         
         if not phys.on_ground and self.move_dir != 0:
             actor.act(Move(self.move_dir / 1000))

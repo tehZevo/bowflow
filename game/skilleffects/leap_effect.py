@@ -23,4 +23,4 @@ class LeapEffect(SkillEffect):
         
         phys.state.vel.x = 0
         
-        phys.apply_force(Vector2(actor.facing_dir / 6, 0.05))
+        phys.apply_force(Vector2(actor.facing_dir / 7, 0.02))
