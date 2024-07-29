@@ -11,7 +11,7 @@ def scaling(ratio):
 
     effect = ForEachTarget(
         in_a=TargetBox(Vector2(4, 0), Vector2(8, 4), max_targets=4),
-        apply=[Damage(power)]
+        apply=[lambda: Damage(power)]
     )
 
     return [effect]

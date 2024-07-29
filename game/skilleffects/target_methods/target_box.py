@@ -17,10 +17,10 @@ class TargetBox(TargetMethod):
         self.size = size
         self.max_targets = max_targets
     
-    def debug(self, caster):
+    def debug(self, caster, time=1):
         min, max = self.get_bounds(caster)
         caster.world.create_entity([
-            DebugBox(min, max)
+            DebugBox(min, max, time=time)
         ])
 
     def get_bounds(self, caster):

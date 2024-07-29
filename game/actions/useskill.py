@@ -21,7 +21,7 @@ class UseSkill(Action):
             entity.get_component(Actor).facing_dir = self.cast_direction
         
         #apply level to get effects
-        effects = self.skilldef.effects(self.level)
+        effects = self.skilldef.effects(self.level / self.skilldef.max_level)
         
         for effect in effects:
             skill_comp = Skill(effect)

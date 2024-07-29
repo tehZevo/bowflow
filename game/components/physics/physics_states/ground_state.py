@@ -25,6 +25,20 @@ class GroundState(PhysicsState):
         pos = self.foothold.start + (self.foothold.end - self.foothold.start) * self.foothold_pos
         self.physics.get_component(Position).set_pos(pos)
 
+    def move_relative(self, amount, stay_on_footholds=True):
+        """Move relative to current foothold, taking in neighboring footholds into account"""
+        fh_width = self.foothold.end.x - self.foothold.start.x
+        fh_speed = (self.foothold.end - self.foothold.start).length() / fh_width #TODO: beware div by 0 with vertical footholds
+        
+        self.foothold_pos = self.foothold_pos + amount / fh_width * fh_speed
+
+        if stay_on_footholds:
+            self.foothold_pos = max(0, min(1, self.foothold_pos))
+            
+        #TODO: move to prev/next foothold if any, else dislodge
+        if self.foothold_pos < 0 or self.foothold_pos > 1:
+            self.physics.dislodge()
+
     def update(self):
         pos = self.physics.get_component(Position)
 
@@ -50,18 +64,6 @@ class GroundState(PhysicsState):
                 self.vel = 0
                 #TODO: set fh position to wall position
         
-        fh_width = self.foothold.end.x - self.foothold.start.x
-        fh_speed = (self.foothold.end - self.foothold.start).length() / fh_width #TODO: beware div by 0 with vertical footholds
-        
-        self.foothold_pos = self.foothold_pos + self.vel / fh_width * fh_speed
-
+        self.move_relative(self.vel, stay_on_footholds=self.physics.stay_on_footholds)
         self.update_pos()
-
         self.vel = self.vel * (1 - GROUND_FRICTION)
-
-        if self.physics.stay_on_footholds:
-            self.foothold_pos = max(0, min(1, self.foothold_pos))
-            
-        #TODO: move to prev/next foothold if any, else dislodge
-        if self.foothold_pos < 0 or self.foothold_pos > 1:
-            self.physics.dislodge()

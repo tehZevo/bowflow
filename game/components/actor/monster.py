@@ -1,5 +1,6 @@
 import random
-
+from pygame.math import Vector2
+ 
 from game.ecs import Component
 from game.actions import Move
 from game.data.exp_calcs import calc_mob_exp
@@ -22,7 +23,9 @@ class Monster(Component, DamageListener, DeathListener):
 
     def init(self):
         self.get_component(Physics).stay_on_footholds = True
-        self.get_component(Sprite).set_image("monster.png")
+        sprite = self.get_component(Sprite)
+        sprite.set_image("monster.png")
+        sprite.offset = Vector2(-1/2, -1)
 
     def on_damage(self, amount, source):
         self.target = source

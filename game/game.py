@@ -38,6 +38,7 @@ class Game:
             skill_binds = {
                 pygame.K_d: "leap",
                 pygame.K_z: "magibolt",
+                pygame.K_q: "rush",
             },
             action_binds = {
                 pygame.K_LEFT: "move_left",
@@ -53,6 +54,7 @@ class Game:
                 "magibolt": 1,
                 "leap": 1,
                 "ascend": 1,
+                "rush": 3,
             },
             skill_points=100
         )
@@ -83,7 +85,7 @@ class Game:
         self.player = self.world.create_entity([
             Position(Vector2(1, 1)),
             Physics(),
-            Sprite(offset=Vector2(-1/2, -1)),
+            Sprite(),
             Actor(),
             HudHooks(self.hud),
             KeyBindMonitor(self.player_data),

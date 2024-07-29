@@ -26,7 +26,9 @@ class Player(Component, LevelUpListener, KeyBindListener):
         self.rope_regrab_delay = 0
     
     def init(self):
-        self.get_component(Sprite).set_image("player.png")
+        sprite = self.get_component(Sprite)
+        sprite.set_image("player.png")
+        sprite.offset = Vector2(-1/2, -1)
     
     def attempt_interact(self):
         my_pos = self.get_component(Position).pos
@@ -50,6 +52,11 @@ class Player(Component, LevelUpListener, KeyBindListener):
         self.climb_dir = ("move_up" in actions) - ("move_down" in actions)
 
         if not phys.on_rope and "move_up" in actions and self.rope_regrab_delay <= 0:
+            for rope in self.world.get_all_components(Rope):
+                if rope.distance(pos.pos) < ROPE_GRAB_DISTANCE:
+                    phys.grab_rope(rope)
+        
+        if phys.on_ground and "move_down" in actions:
             for rope in self.world.get_all_components(Rope):
                 if rope.distance(pos.pos) < ROPE_GRAB_DISTANCE:
                     phys.grab_rope(rope)
