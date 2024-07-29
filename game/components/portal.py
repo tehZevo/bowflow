@@ -8,6 +8,8 @@ from game.components.game_master import GameMaster
 class Portal(Component, Interactable):
     def __init__(self):
         super().__init__()
+
+        self.requirements = [Sprite]
     
     def init(self):
         self.get_component(Sprite).set_image("game/assets/images/portal.png")

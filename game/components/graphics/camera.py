@@ -12,6 +12,7 @@ class Camera(Component):
         #TODO: offset camera y (raise above player.. maybe instead of setting a camera target, we update the camera's target position every step?)
         self.target = target
         self.speed = speed
+        self.requirements = [Position]
     
     def set_target(self, entity):
         self.target = target

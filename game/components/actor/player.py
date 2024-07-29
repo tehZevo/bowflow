@@ -24,6 +24,7 @@ class Player(Component, LevelUpListener, KeyBindListener):
         self.move_dir = 0
         self.climb_dir = 0
         self.rope_regrab_delay = 0
+        self.requirements = [Actor, Physics, Sprite]
     
     def init(self):
         sprite = self.get_component(Sprite)

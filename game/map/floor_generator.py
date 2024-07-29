@@ -61,8 +61,6 @@ def generate_floor(world):
     ])
 
     portal = world.create_entity([
-        Position(),
-        Sprite(),
         Portal(),
     ])
 

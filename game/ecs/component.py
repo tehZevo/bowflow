@@ -3,6 +3,13 @@ class Component:
     def __init__(self):
         self.entity = None
         self.world = None
+        self.requirements = []
+
+    def ensure_requirements(self):
+        for Req in self.requirements:
+            if self.entity.get_component(Req) is None:
+                req = Req()
+                self.entity.add_component(req)
 
     def init(self):
         pass

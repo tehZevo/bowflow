@@ -1,12 +1,10 @@
 #TODO: clean up imports
 import time
 import asyncio
-import math
 
 import pygame, sys
 from pygame.math import Vector2
 import pygame_gui
-import i18n
 
 from game.ecs import World
 from game.components.physics import Physics, Position, Foothold
@@ -84,16 +82,12 @@ class Game:
         
         self.player = self.world.create_entity([
             Position(Vector2(1, 1)),
-            Physics(),
-            Sprite(),
-            Actor(),
             HudHooks(self.hud),
             KeyBindMonitor(self.player_data),
             player_comp,
         ])
 
         self.camera = self.world.create_entity([
-            Position(),
             Camera(target=self.player)
         ])
 

@@ -21,6 +21,8 @@ class Physics(Component):
         self.state = AirState(self)
         
         self.stay_on_footholds = False
+
+        self.requirements = [Position]
     
     @property
     def on_ground(self):

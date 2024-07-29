@@ -14,6 +14,7 @@ class Sprite(Renderable):
             self.set_image(image_path)
 
         self.offset = Vector2() if offset is None else offset
+        self.requirements = [Position]
     
     def set_image(self, image_path):
         self.image = pygame.image.load(image_path)

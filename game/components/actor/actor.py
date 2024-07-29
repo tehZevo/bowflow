@@ -17,6 +17,7 @@ class Actor(Component, PhysicsStateListener):
         self.facing_dir = 1
 
         self.stats = Stats(hp=100, mp=100)
+        self.requirements = [Physics]
     
     def on_physics_state_changed(self, state):
         #cancel current action when entering rope state

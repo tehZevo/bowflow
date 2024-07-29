@@ -9,6 +9,7 @@ class Entity:
         component.entity = self
         component.world = self.world
         self.components.append(component)
+        component.ensure_requirements()
         component.init()
     
     def remove(self):
