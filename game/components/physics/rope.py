@@ -11,6 +11,11 @@ class Rope(Renderable):
         self.length = length
         self.bottom = self.top - Vector2(0, self.length)
 
+    def distance(self, point):
+        if point.y > self.top.y or point.y < self.bottom.y:
+            return float("inf")
+        return abs(point.x - self.top.x)
+        
     def render(self, screen, camera=None):
         if camera is None:
             return

@@ -47,6 +47,8 @@ class Physics(Component):
                 self.state.force += force
             case GroundState():
                 self.state.force += force.x
+            case RopeState():
+                self.state.vel += force.y
 
     def dislodge(self, keep_vel=True):
         """Detatch from foothold"""
@@ -60,10 +62,16 @@ class Physics(Component):
         self.state.vel = vel
     
     def grab_rope(self, rope):
-        #TODO: move to a rope state
+        self.state = RopeState(self)
         pos = self.get_component(Position).pos
-        pos_on_rope = (pos - rope.top).project(rope.bottom - rope.top)
-        rope_pos = project_onto_foothold(pos_on_rope, rope.bottom, rope.top)
+        rope_pos = (pos - rope.bottom).dot(rope.top - rope.bottom) / (rope.top - rope.bottom).length_squared()
+        self.state.rope = rope
+        self.state.rope_pos = rope_pos
+    
+    def drop_from_rope(self, direction=0):
+        vel = Vector2() if direction == 0 else Vector2(direction, 1.5) / 15 #TODO: test vel
+        self.state = AirState(self)
+        self.state.vel = vel
 
     def update(self):
         #TODO: allow transitioning between multiple states per frame?

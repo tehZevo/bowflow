@@ -11,10 +11,10 @@ from .actor import Actor
 from .level_up_listener import LevelUpListener
 from .player_data_listener import PlayerDataListener
 from game.components.key_bind_listener import KeyBindListener
-from game.actions import Move, Jump
+from game.actions import Move, Jump, Climb, JumpOffRope
 from game.data.skill_list import skill_list
 from game.data.exp_calcs import calc_player_exp, skill_points_per_level
-from game.constants import INTERACT_RADIUS, ROPE_GRAB_DISTANCE
+from game.constants import INTERACT_RADIUS, ROPE_GRAB_DISTANCE, ROPE_REGRAB_DELAY, DT
 from game.components.physics.physics_states.ground_state import GroundState
 
 class Player(Component, LevelUpListener, KeyBindListener):
@@ -22,6 +22,8 @@ class Player(Component, LevelUpListener, KeyBindListener):
         super().__init__()
         self.player_data = player_data
         self.move_dir = 0
+        self.climb_dir = 0
+        self.rope_regrab_delay = 0
     
     def init(self):
         self.get_component(Sprite).set_image("player.png")
@@ -40,22 +42,28 @@ class Player(Component, LevelUpListener, KeyBindListener):
         pos = self.get_component(Position)
         actor = self.get_component(Actor)
 
-        if len(skills) > 0:
+        if not phys.on_rope and len(skills) > 0:
             self.use_skill(skills[0], self.move_dir)
             return
         
         self.move_dir = ("move_right" in actions) - ("move_left" in actions)
+        self.climb_dir = ("move_up" in actions) - ("move_down" in actions)
 
-        if "move_up" in actions:
+        if not phys.on_rope and "move_up" in actions and self.rope_regrab_delay <= 0:
             for rope in self.world.get_all_components(Rope):
-                if distance_to_segment(pos.pos, role.top, rope.bottom) < ROPE_GRAB_DISTANCE:
+                if rope.distance(pos.pos) < ROPE_GRAB_DISTANCE:
                     phys.grab_rope(rope)
                     
         if phys.on_ground and "jump" in actions:
             actor.act(Jump(0.15))
         
+        if phys.on_rope and "jump" in actions and self.move_dir != 0:
+            self.rope_regrab_delay = ROPE_REGRAB_DELAY
+            actor.act(JumpOffRope(self.move_dir))
+        
         if phys.on_ground and "interact" in actions:
             self.attempt_interact()
+        
     
     def on_level_up(self, level):
         #TODO: screen wipe on level up would be cool
@@ -115,3 +123,11 @@ class Player(Component, LevelUpListener, KeyBindListener):
         
         if not phys.on_ground and self.move_dir != 0:
             actor.act(Move(self.move_dir / 1000))
+
+        if phys.on_rope and self.climb_dir != 0:
+            print(self.climb_dir, "climb dir")
+            actor.act(Climb(self.climb_dir))
+
+        #TODO: make rope grab logic in air based on intersection, but on ground, based on distance
+        if self.rope_regrab_delay > 0:
+            self.rope_regrab_delay -= DT

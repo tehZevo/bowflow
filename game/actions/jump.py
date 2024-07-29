@@ -10,6 +10,7 @@ class Jump(Action):
         self.power = power
     
     def start(self, entity):
+        self.done = True
         phys = entity.get_component(Physics)
 
         jump_sound = pygame.mixer.Sound("jump.wav") #TODO: store this somewhere
@@ -17,4 +18,3 @@ class Jump(Action):
         
         phys.dislodge()
         phys.apply_force(Vector2(0, self.power))
-        self.done = True

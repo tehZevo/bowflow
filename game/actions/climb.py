@@ -4,10 +4,10 @@ from .action import Action
 from ..components.physics import Physics
 from ..components.actor import Actor
 
-class Move(Action):
-    def __init__(self, speed):
+class Climb(Action):
+    def __init__(self, dir):
         super().__init__()
-        self.speed = speed
+        self.dir = dir
         self.interruptible = True
     
     def update(self, entity):
@@ -16,8 +16,5 @@ class Move(Action):
         phys = entity.get_component(Physics)
         actor = entity.get_component(Actor)
         
-        phys.apply_force(Vector2(self.speed, 0))
-        if self.speed > 0:
-            actor.facing_dir = 1
-        elif self.speed < 0:
-            actor.facing_dir = -1
+        phys.apply_force(Vector2(0, self.dir / 20))
+        
