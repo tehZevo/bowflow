@@ -18,6 +18,7 @@ class ComboInto(SkillEffect):
         actor = skill.caster.get_component(Actor)
 
         if not isinstance(actor.next_action, UseSkill):
+            print(actor.next_action)
             return
         
         use_skill = actor.next_action
@@ -25,4 +26,5 @@ class ComboInto(SkillEffect):
             #TODO: this equality check might get messy later
             if use_skill.skilldef == skilldef:
                 use_skill.locked = False
+                actor.act(use_skill, force=True)
                 return

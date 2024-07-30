@@ -8,6 +8,6 @@ leap = SkillDef(
     scaling,
     use_time=0.5,
     on_ground=False,
-    bufferable=False,
+    bufferable=True,
     max_level=1,
 )

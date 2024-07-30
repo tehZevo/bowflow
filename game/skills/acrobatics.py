@@ -7,9 +7,12 @@ from ..skilleffects import Damage, ForEachTarget, WithSelfTarget
 from ..skilleffects.set_pos import SetPos
 from ..skilleffects.chain import Chain
 from ..skilleffects.freeze import Freeze
+from ..skilleffects.combo_into import ComboInto
 from ..skilleffects.target_methods import TargetBox
 
 def scaling(ratio):
+    from .leap import leap
+    
     power = math.floor(20 + ratio)
 
     #TODO: create Async skilleffect that runs the effect and immediately sets done=True
@@ -26,6 +29,7 @@ def scaling(ratio):
         WithSelfTarget(
             apply=[lambda: Freeze(0.5)]
         ),
+        ComboInto([leap]),
     ])
 
     return [effect]

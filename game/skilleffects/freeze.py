@@ -9,8 +9,6 @@ class Freeze(SkillEffect):
         self.time = time
     
     def start(self, skill):
-        #TODO: prevent physics updates flag on physics
-        
         phys = skill.target.get_component(Physics)
         phys.prevent_updates = True
     

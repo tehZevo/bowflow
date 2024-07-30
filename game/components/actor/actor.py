@@ -42,17 +42,20 @@ class Actor(Component, PhysicsStateListener):
         self.action.end(self.entity)
         self.action = None
 
-    def use_skill(self, skilldef, level=1, override_direction=None):
+    def use_skill(self, skilldef, level=1, override_direction=None, force=False):
         from game.actions.use_skill import UseSkill
 
         dir = override_direction if override_direction is not None else self.facing_dir
 
-        self.act(UseSkill(skilldef, level=level, cast_direction=dir))
+        self.act(UseSkill(skilldef, level=level, cast_direction=dir), force)
 
     def act(self, action, force=False):
         if self.action is None:
             self.begin_action(action)
         elif self.action.interruptible or force:
+            #clear next action since we forced the current one
+            if force:
+                self.next_action = None
             self.end_action()
             self.begin_action(action)
         elif action.bufferable:
