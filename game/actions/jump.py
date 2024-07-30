@@ -13,7 +13,7 @@ class Jump(Action):
         self.done = True
         phys = entity.get_component(Physics)
 
-        jump_sound = pygame.mixer.Sound("jump.wav") #TODO: store this somewhere
+        jump_sound = pygame.mixer.Sound("game/assets/audio/jump.wav") #TODO: store this somewhere
         pygame.mixer.Sound.play(jump_sound)
         
         phys.dislodge()

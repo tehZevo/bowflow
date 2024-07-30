@@ -1,4 +1,6 @@
 import random
+
+import pygame
 from pygame.math import Vector2
  
 from game.ecs import Component
@@ -29,12 +31,18 @@ class Monster(Component, DamageListener, DeathListener):
 
     def on_damage(self, amount, source):
         self.target = source
+
+        hit_sound = pygame.mixer.Sound("game/assets/audio/mob_hit.wav") #TODO: store this somewhere
+        pygame.mixer.Sound.play(hit_sound)
         
         if source is not None:
             self.last_attacker = source
     
     def on_death(self):
         from .player import Player
+
+        die_sound = pygame.mixer.Sound("game/assets/audio/mob_die.wav") #TODO: store this somewhere
+        pygame.mixer.Sound.play(die_sound)
 
         if self.last_attacker is not None:
             player = self.last_attacker.get_component(Player)

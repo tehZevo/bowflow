@@ -10,7 +10,7 @@ from .stats_listener import StatsListener
 from ..physics.physics_state_listener import PhysicsStateListener
 from ..graphics.damage_number import DamageNumber
 
-class Actor(Component, PhysicsStateListener, DamageListener):
+class Actor(Component, PhysicsStateListener):
     def __init__(self):
         super().__init__()
 
@@ -35,12 +35,6 @@ class Actor(Component, PhysicsStateListener, DamageListener):
         for listener in self.entity.get_all_components(StatsListener):
             listener.on_stats_changed(self.stats)
     
-    def on_damage(self, amount, source=None):
-        self.world.create_entity([
-            Position(self.get_component(Position).pos + Vector2(0, 2)),
-            DamageNumber(amount),
-        ])
-        
     def begin_action(self, action):
         self.action = action
         if self.action is not None:

@@ -18,7 +18,7 @@ class AscendEffect(SkillEffect):
             skill.done = True
             return
 
-        leap_sound = pygame.mixer.Sound("leap.wav") #TODO: store this somewhere
+        leap_sound = pygame.mixer.Sound("game/assets/audio/leap.wav") #TODO: store this somewhere
         pygame.mixer.Sound.play(leap_sound)
         actor = skill.caster.get_component(Actor)
         actor.act(Busy(), force=True)

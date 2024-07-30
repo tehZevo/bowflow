@@ -18,7 +18,7 @@ class LeapEffect(SkillEffect):
             return
         actor = skill.caster.get_component(Actor)
 
-        leap_sound = pygame.mixer.Sound("leap.wav") #TODO: store this somewhere
+        leap_sound = pygame.mixer.Sound("game/assets/audio/leap.wav") #TODO: store this somewhere
         pygame.mixer.Sound.play(leap_sound)
         
         phys.state.vel.x = 0
