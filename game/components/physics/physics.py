@@ -18,6 +18,7 @@ class Physics(Component):
         self.stay_on_footholds = False
 
         self.requirements = [Position]
+        self.prevent_updates = False
     
     @property
     def on_ground(self):
@@ -83,7 +84,20 @@ class Physics(Component):
 
         self.alert_listeners()
 
+    def zero_velocity(self):
+        match self.state:
+            case AirState():
+                self.state.vel = Vector2()
+            case GroundState():
+                self.state.vel = 0
+            case RopeState():
+                self.state.vel = 0
+
     def update(self):
         #TODO: allow transitioning between multiple states per frame?
+        
+        if self.prevent_updates:
+            return
+
         self.state.update()
         
