@@ -1,4 +1,3 @@
-#TODO: clean up imports
 import time
 import asyncio
 
@@ -8,11 +7,10 @@ import pygame_gui
 
 from game.ecs import World
 from game.components.physics import Physics, Position, Foothold
-from game.components.graphics import Sprite, Renderable, Camera
+from game.components.graphics import Renderable, Camera
 from game.components.ui import HudHooks
-from game.components.actor import Player, Actor, Monster
+from game.components.actor import Player
 from game.components.key_bind_monitor import KeyBindMonitor
-from game.components.spawner import Spawner
 from game.components.player_spawn import PlayerSpawn
 from game.components.game_master import GameMaster
 from game.constants import DT
@@ -37,6 +35,7 @@ class Game:
                 pygame.K_d: "leap",
                 pygame.K_z: "magibolt",
                 pygame.K_q: "rush",
+                pygame.K_w: "acrobatics",
             },
             action_binds = {
                 pygame.K_LEFT: "move_left",
@@ -53,6 +52,7 @@ class Game:
                 "leap": 1,
                 "ascend": 1,
                 "rush": 3,
+                "acrobatics": 3,
             },
             skill_points=100
         )

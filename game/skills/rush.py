@@ -14,7 +14,7 @@ def scaling(ratio):
         apply=[lambda: Push(distance, time=1)]
     )
     mob_carry = Carry(
-        target_method=TargetBox(Vector2(1, 1), Vector2(3, 3), max_targets=12),
+        target_method=TargetBox(Vector2(0, 1), Vector2(1, 3), max_targets=12),
         time=1
     )
     return [self_push, mob_carry]

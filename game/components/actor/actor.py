@@ -45,14 +45,7 @@ class Actor(Component, PhysicsStateListener):
     def use_skill(self, skilldef, level=1, override_direction=None):
         from game.actions.useskill import UseSkill
 
-        #ground/air checks
-        phys = self.get_component(Physics)
-        if not skilldef.in_air and phys.in_air:
-            return
-        if not skilldef.on_ground and phys.on_ground:
-            return
-        if not skilldef.on_rope and phys.on_rope:
-            return
+        
         
         dir = override_direction if override_direction is not None else self.facing_dir
 

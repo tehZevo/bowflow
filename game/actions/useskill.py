@@ -1,6 +1,7 @@
 from .action import Action
 from ..constants import DT
 from ..components.skill import Skill
+from ..components.physics.physics import Physics
 from ..components.actor import Actor
 
 class UseSkill(Action):
@@ -16,6 +17,17 @@ class UseSkill(Action):
         self.level = level
     
     def start(self, entity):
+        #physics state checks, bail if failed
+
+        #ground/air checks
+        phys = entity.get_component(Physics)
+        if not self.skilldef.in_air and phys.in_air:
+            return
+        if not self.skilldef.on_ground and phys.on_ground:
+            return
+        if not self.skilldef.on_rope and phys.on_rope:
+            return
+
         #allow "buffered" turns before cast
         if self.cast_direction is not None:
             entity.get_component(Actor).facing_dir = self.cast_direction

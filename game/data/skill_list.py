@@ -6,4 +6,5 @@ skill_list = {
     "magibolt": skills.magibolt,
     "ascend": skills.ascend,
     "rush": skills.rush,
+    "acrobatics": skills.acrobatics,
 }

@@ -1,14 +1,9 @@
-#TODO: clean up imports
 import random
 
 from pygame.math import Vector2
 
 from game.ecs import Component
-from game.utils import intersect, project_onto_foothold
-from game.constants import GRAVITY, GROUND_FRICTION, AIR_FRICTION
 from .position import Position
-from .foothold import Foothold
-from .wall import Wall
 from .physics_state_listener import PhysicsStateListener
 from .physics_states.air_state import AirState
 from .physics_states.ground_state import GroundState
