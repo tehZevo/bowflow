@@ -15,17 +15,28 @@ class UseSkill(Action):
         self.cast_direction = None if cast_direction is None else 1 if cast_direction > 0 else -1 if cast_direction < 0 else None
         self.bufferable = skilldef.bufferable
         self.level = level
+        
+        self.locked = self.skilldef.combo
     
     def start(self, entity):
+        #bail on combo lock
+        #TODO: how to prevent these from preventing other actions like movement?
+        if self.locked:
+            self.done = True
+            return
+            
         #physics state checks, bail if failed
 
         #ground/air checks
         phys = entity.get_component(Physics)
         if not self.skilldef.in_air and phys.in_air:
+            self.done = True
             return
         if not self.skilldef.on_ground and phys.on_ground:
+            self.done = True
             return
         if not self.skilldef.on_rope and phys.on_rope:
+            self.done = True
             return
 
         #allow "buffered" turns before cast

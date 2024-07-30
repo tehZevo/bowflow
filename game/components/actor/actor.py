@@ -43,10 +43,8 @@ class Actor(Component, PhysicsStateListener):
         self.action = None
 
     def use_skill(self, skilldef, level=1, override_direction=None):
-        from game.actions.useskill import UseSkill
+        from game.actions.use_skill import UseSkill
 
-        
-        
         dir = override_direction if override_direction is not None else self.facing_dir
 
         self.act(UseSkill(skilldef, level=level, cast_direction=dir))

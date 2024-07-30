@@ -35,11 +35,11 @@ class Push(SkillEffect):
             skill.done = True
             return
         
-        target_actor.act(Busy(), force=True)
+        #target_actor.act(Busy(), force=True)
     
     def end_push(self, skill):
         skill.done = True
-        target_actor.act(None, force=True)
+        #target_actor.act(None, force=True)
         target_phys.state.vel = 0
         if self.relative_to_caster:
             print("target push end")
@@ -52,14 +52,14 @@ class Push(SkillEffect):
         
         if not target_phys.on_ground:
             skill.done = True
-            target_actor.act(None, force=True)
+            #target_actor.act(None, force=True)
             return
         
         self.time_remaining -= DT
 
         if self.time_remaining <= 0:
             skill.done = True
-            target_actor.act(None, force=True)
+            #target_actor.act(None, force=True)
             target_phys.state.vel = 0
             if self.relative_to_caster:
                 print("target push end")

@@ -9,7 +9,7 @@ class Action:
     def start(self, entity):
         """Called when an actor begins this action"""
         pass
-    
+
     def update(self, entity):
         """Called every step that the actor is performing this action"""
         pass

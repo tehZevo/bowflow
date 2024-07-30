@@ -5,6 +5,7 @@ from pygame.math import Vector2
 from .skilldef import SkillDef
 from ..skilleffects import Damage, ForEachTarget, WithSelfTarget
 from ..skilleffects.set_pos import SetPos
+from ..skilleffects.chain import Chain
 from ..skilleffects.target_methods import TargetBox
 
 def scaling(ratio):
@@ -14,16 +15,18 @@ def scaling(ratio):
     #TODO: these parallel effects may technically work due to skill effect entity creation order
     # but if not, impl the above chain skill effect
     
-    pos_effect = WithSelfTarget(
-        apply=[lambda: SetPos(Vector2(0, 3))]
-    )
-    #TODO: hold player in place while using
-    damage_effect = ForEachTarget(
-        in_a=TargetBox(Vector2(0, -1.5), Vector2(5, 3), max_targets=6),
-        apply=[lambda: Damage(power)]
-    )
+    effect = Chain([
+        WithSelfTarget(
+            apply=[lambda: SetPos(Vector2(0, 3))]
+        ),
+        #TODO: hold player in place while using
+        ForEachTarget(
+            in_a=TargetBox(Vector2(0, -1.5), Vector2(5, 3), max_targets=6),
+            apply=[lambda: Damage(power)]
+        )
+    ])
 
-    return [pos_effect, damage_effect]
+    return [effect]
 
 acrobatics = SkillDef(
     scaling,
@@ -31,4 +34,5 @@ acrobatics = SkillDef(
     on_ground=True,
     in_air=False,
     max_level=3,
+    combo=True
 )
