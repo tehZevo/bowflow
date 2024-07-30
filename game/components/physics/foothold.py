@@ -23,6 +23,6 @@ class Foothold(Renderable):
         start = camera.to_screen(self.start)
         end = camera.to_screen(self.end)
         #TODO: if has prev/next, fill in circle, else leave empty
-        pygame.draw.line(screen, (0, 0, 255), start, end)
-        pygame.draw.circle(screen, (0, 0, 255), start, 8, width=0)
-        pygame.draw.circle(screen, (0, 0, 255), end, 8, width=0)
+        pygame.draw.line(screen, (0, 0, 255), start, end, width=3)
+        pygame.draw.circle(screen, (0, 0, 255), start, 8, width=3 if self.prev is None else 0)
+        pygame.draw.circle(screen, (0, 0, 255), end, 8, width=3 if self.next is None else 0)

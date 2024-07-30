@@ -26,5 +26,15 @@ def intersect(p1, p2, p3, p4):
 
     return Vector2(x, y)
 
+def bezier(a, b, c, d, t):
+    ab = a.lerp(b, t)
+    bc = b.lerp(c, t)
+    cd = c.lerp(d, t)
+    abc = ab.lerp(bc, t)
+    bcd = bc.lerp(cd, t)
+    abcd = abc.lerp(bcd, t)
+    
+    return abcd
+
 def project_onto_foothold(point, fh_start, fh_end):
     return (point - fh_start).length() / (fh_end - fh_start).length() #TODO: not entirely correct, assumes point is already within segment

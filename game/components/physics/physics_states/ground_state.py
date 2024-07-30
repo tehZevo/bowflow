@@ -32,9 +32,15 @@ class GroundState(PhysicsState):
         if stay_on_footholds:
             self.foothold_pos = max(0, min(1, self.foothold_pos))
             
-        #TODO: move to prev/next foothold if any, else dislodge
         if self.foothold_pos < 0 or self.foothold_pos > 1:
-            self.physics.dislodge()
+            if self.foothold_pos < 0 and self.foothold.prev is not None:
+                self.foothold = self.foothold.prev
+                self.foothold_pos = 1 + self.foothold_pos
+            elif self.foothold_pos > 1 and self.foothold.next is not None:
+                self.foothold = self.foothold.next
+                self.foothold_pos = 1 - self.foothold_pos
+            else:
+                self.physics.dislodge()
 
     def update(self):
         pos = self.physics.get_component(Position)
