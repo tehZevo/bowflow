@@ -1,14 +1,16 @@
-import pygame
+from pygame.math import Vector2
 
 from game.ecs import Component
 from game.data.stats import Stats
 from ..physics.physics import Physics
+from ..physics.position import Position
 from .damage_listener import DamageListener
 from .death_listener import DeathListener
 from .stats_listener import StatsListener
 from ..physics.physics_state_listener import PhysicsStateListener
+from ..graphics.damage_number import DamageNumber
 
-class Actor(Component, PhysicsStateListener):
+class Actor(Component, PhysicsStateListener, DamageListener):
     def __init__(self):
         super().__init__()
 
@@ -32,6 +34,12 @@ class Actor(Component, PhysicsStateListener):
         
         for listener in self.entity.get_all_components(StatsListener):
             listener.on_stats_changed(self.stats)
+    
+    def on_damage(self, amount, source=None):
+        self.world.create_entity([
+            Position(self.get_component(Position).pos + Vector2(0, 2)),
+            DamageNumber(amount),
+        ])
         
     def begin_action(self, action):
         self.action = action

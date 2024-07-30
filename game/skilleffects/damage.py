@@ -1,3 +1,5 @@
+import random
+
 from .skilleffect import SkillEffect
 from ..components.actor import Actor
 
@@ -11,4 +13,5 @@ class Damage(SkillEffect):
         
         actor = skill.target.get_component(Actor)
 
-        actor.damage(self.power, skill.caster)
+        #TODO: calculate real damage range
+        actor.damage(self.power * (1 + random.random() * 0.2 - 0.1), skill.caster)
