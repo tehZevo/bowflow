@@ -36,6 +36,7 @@ class Game:
                 pygame.K_z: "magibolt",
                 pygame.K_q: "rush",
                 pygame.K_w: "acrobatics",
+                pygame.K_e: "tornado",
             },
             action_binds = {
                 pygame.K_LEFT: "move_left",
@@ -53,6 +54,7 @@ class Game:
                 "ascend": 1,
                 "rush": 3,
                 "acrobatics": 3,
+                "tornado": 3,
             },
             skill_points=100
         )

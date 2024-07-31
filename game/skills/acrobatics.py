@@ -12,6 +12,7 @@ from ..skilleffects.target_methods import TargetBox
 
 def scaling(ratio):
     from .leap import leap
+    from .tornado import tornado
     
     power = math.floor(20 + ratio)
 
@@ -29,7 +30,7 @@ def scaling(ratio):
         WithSelfTarget(
             apply=[lambda: Freeze(1)]
         ),
-        ComboInto([leap]),
+        ComboInto([leap, tornado]),
     ])
 
     return [effect]
