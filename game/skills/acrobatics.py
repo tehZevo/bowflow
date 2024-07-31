@@ -24,10 +24,10 @@ def scaling(ratio):
         #TODO: hold player in place while using
         ForEachTarget(
             in_a=TargetBox(Vector2(0, -1.5), Vector2(5, 3), max_targets=6),
-            apply=[lambda: Damage(power)]
+            apply=[lambda: Damage(power, hits=4, delays=[0, 0.2, 0.4, 0.4])]
         ),
         WithSelfTarget(
-            apply=[lambda: Freeze(0.5)]
+            apply=[lambda: Freeze(1)]
         ),
         ComboInto([leap]),
     ])
@@ -36,7 +36,7 @@ def scaling(ratio):
 
 acrobatics = SkillDef(
     scaling,
-    use_time=0.5,
+    use_time=1,
     on_ground=True,
     in_air=False,
     max_level=3,
