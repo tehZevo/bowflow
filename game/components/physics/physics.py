@@ -55,7 +55,7 @@ class Physics(Component):
             case RopeState():
                 self.state.vel += force.y
 
-    def dislodge(self, keep_vel=True):
+    def dislodge(self, keep_vel=True, ignore_last_foothold=False):
         """Detatch from foothold"""
         if not self.on_ground:
             return
@@ -63,7 +63,8 @@ class Physics(Component):
         vel = Vector2()
         if keep_vel:
             vel = Vector2(self.state.vel, 0)
-        self.state = AirState(self)
+        ignored_footholds = [self.state.foothold] if ignore_last_foothold else []
+        self.state = AirState(self, ignored_footholds=ignored_footholds)
         self.state.vel = vel
 
         self.alert_listeners()

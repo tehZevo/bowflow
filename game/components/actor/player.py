@@ -12,6 +12,7 @@ from .level_up_listener import LevelUpListener
 from .player_data_listener import PlayerDataListener
 from game.components.key_bind_listener import KeyBindListener
 from game.actions import Move, Jump, Climb, JumpOffRope
+from game.actions.jump_down import JumpDown
 from game.data.skill_list import skill_list
 from game.data.exp_calcs import calc_player_exp, skill_points_per_level
 from game.constants import INTERACT_RADIUS, ROPE_GRAB_DISTANCE, ROPE_REGRAB_DELAY, DT
@@ -61,9 +62,12 @@ class Player(Component, LevelUpListener, KeyBindListener):
             for rope in self.world.get_all_components(Rope):
                 if rope.distance(pos.pos) < ROPE_GRAB_DISTANCE:
                     phys.grab_rope(rope)
-                    
+
         if phys.on_ground and "jump" in actions:
-            actor.act(Jump(0.15))
+            if "move_down" in actions:
+                actor.act(JumpDown())
+            else:
+                actor.act(Jump(0.15))
         
         if phys.on_rope and "jump" in actions and self.move_dir != 0:
             self.rope_regrab_delay = ROPE_REGRAB_DELAY

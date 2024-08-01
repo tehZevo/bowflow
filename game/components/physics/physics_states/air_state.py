@@ -8,10 +8,11 @@ from ..foothold import Foothold
 from ..wall import Wall
 
 class AirState(PhysicsState):
-    def __init__(self, physics):
+    def __init__(self, physics, ignored_footholds=[]):
         super().__init__(physics)
         self.vel = Vector2()
         self.force = Vector2()
+        self.ignored_footholds = ignored_footholds
 
         #TODO: add an "ignored footholds" field for down jump
     
@@ -46,6 +47,8 @@ class AirState(PhysicsState):
         if self.vel.y <= 0:
             #TODO: find first collision in direction instead of first based on iteration order
             for fh in footholds:
+                if fh in self.ignored_footholds:
+                    continue
                 #TODO: multiply vel by fixed DT offset? right now its per-frame movement
                 intersection_pos = intersect(fh.start, fh.end, pos.pos, pos.pos + self.vel)
                 if intersection_pos is None:
