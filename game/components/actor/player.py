@@ -41,43 +41,43 @@ class Player(Component, LevelUpListener, KeyBindListener):
                 interactable.on_interact(self.entity)
                 break
 
-    def on_key_binds(self, actions, skills):
+    def on_key_binds(self, binds):
         phys = self.get_component(Physics)
         pos = self.get_component(Position)
         actor = self.get_component(Actor)
 
-        if not phys.on_rope and len(skills) > 0:
-            self.use_skill(skills[0], self.move_dir)
+        if not phys.on_rope and len(binds.pressed_skills) > 0:
+            self.use_skill(list(binds.pressed_skills)[0], self.move_dir)
             return
         
-        self.move_dir = ("move_right" in actions) - ("move_left" in actions)
-        self.climb_dir = ("move_up" in actions) - ("move_down" in actions)
+        self.move_dir = ("move_right" in binds.held_actions) - ("move_left" in binds.held_actions)
+        self.climb_dir = ("move_up" in binds.held_actions) - ("move_down" in binds.held_actions)
 
-        if not phys.on_rope and "move_up" in actions and self.rope_regrab_delay <= 0:
+        if not phys.on_rope and "move_up" in binds.held_actions and self.rope_regrab_delay <= 0:
             for rope in self.world.get_all_components(Rope):
                 if rope.distance(pos.pos) < ROPE_GRAB_DISTANCE:
                     phys.grab_rope(rope)
         
-        if phys.on_ground and "move_down" in actions:
+        if phys.on_ground and "move_down" in binds.held_actions:
             for rope in self.world.get_all_components(Rope):
                 if rope.distance(pos.pos) < ROPE_GRAB_DISTANCE:
                     phys.grab_rope(rope)
 
-        if phys.on_ground and "jump" in actions:
-            if "move_down" in actions:
+        if phys.on_ground and "jump" in binds.pressed_actions:
+            if "move_down" in binds.held_actions:
                 actor.act(JumpDown())
             else:
                 actor.act(Jump(0.15))
         
-        if phys.on_rope and "jump" in actions and self.move_dir != 0:
+        if phys.on_rope and "jump" in binds.pressed_actions and self.move_dir != 0:
             self.rope_regrab_delay = ROPE_REGRAB_DELAY
             actor.act(JumpOffRope(self.move_dir))
         
-        if phys.on_rope and "jump" in actions and self.climb_dir > 0:
+        if phys.on_rope and "jump" in binds.held_actions and self.climb_dir > 0:
             print("ascend")
             self.use_skill("ascend", self.move_dir)
         
-        if phys.on_ground and "interact" in actions:
+        if phys.on_ground and "interact" in binds.pressed_actions:
             self.attempt_interact()
         
     

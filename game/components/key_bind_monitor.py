@@ -6,7 +6,7 @@ from .key_bind_listener import KeyBindListener
 
 def pressed_binds(bind_map):
     pressed = pygame.key.get_pressed()
-    binds = [bind for key, bind in bind_map.items() if pressed[key]]
+    binds = set([bind for key, bind in bind_map.items() if pressed[key]])
     return binds
 
 #TODO: update bindings if they change...
@@ -17,6 +17,12 @@ class KeyBindMonitor(Component):
     def __init__(self, player_data):
         super().__init__()
         self.player_data = player_data
+        self.pressed_actions = set()
+        self.pressed_skills = set()
+        self.released_actions = set()
+        self.released_skills = set()
+        self.held_actions = set()
+        self.held_skills = set()
     
     def get_pressed_binds(self):
         actions = pressed_binds(self.player_data.action_binds)
@@ -26,6 +32,15 @@ class KeyBindMonitor(Component):
     def update(self):
         actions, skills = self.get_pressed_binds()
         
+        self.pressed_actions = actions - self.held_actions
+        self.pressed_skills = skills - self.held_skills
+
+        self.released_actions = self.held_actions - actions
+        self.released_skills = self.held_skills - skills
+
+        self.held_actions = actions
+        self.held_skills = skills
+        
         for listener in self.entity.get_all_components(KeyBindListener):
-            listener.on_key_binds(actions, skills)
+            listener.on_key_binds(self)
         

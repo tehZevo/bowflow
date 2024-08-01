@@ -63,6 +63,7 @@ class Physics(Component):
         vel = Vector2()
         if keep_vel:
             vel = Vector2(self.state.vel, 0)
+        
         ignored_footholds = [self.state.foothold] if ignore_last_foothold else []
         self.state = AirState(self, ignored_footholds=ignored_footholds)
         self.state.vel = vel
