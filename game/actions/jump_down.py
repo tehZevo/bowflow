@@ -4,6 +4,7 @@ from pygame.math import Vector2
 from .action import Action
 from game.components.physics.physics import Physics
 
+#TODO: add physics method for jumping down so it can NOT, if the fh has jumping down disabled
 class JumpDown(Action):
     def __init__(self):
         super().__init__()

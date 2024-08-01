@@ -5,6 +5,7 @@ from pygame.math import Vector2
  
 from game.ecs import Component
 from game.actions import Move
+from game.actions.hitstun import Hitstun
 from game.data.exp_calcs import calc_mob_exp
 from ..physics.physics import Physics
 from ..graphics.sprite import Sprite
@@ -35,8 +36,14 @@ class Monster(Component, DamageListener, DeathListener):
         hit_sound = pygame.mixer.Sound("game/assets/audio/mob_hit.wav") #TODO: store this somewhere
         pygame.mixer.Sound.play(hit_sound)
         
+        actor = self.get_component(Actor)
+        hitstun_dir = -actor.facing_dir
+
         if source is not None:
             self.last_attacker = source
+            hitstun_dir = source.get_component(Actor).facing_dir
+        
+        actor.act(Hitstun(hitstun_dir))
     
     def on_death(self):
         from .player import Player
