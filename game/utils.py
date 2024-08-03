@@ -26,6 +26,13 @@ def intersect(p1, p2, p3, p4):
 
     return Vector2(x, y)
 
+def closest_point_in_box(point, center, size):
+    box_min = center - size / 2
+    box_max = center + size / 2
+    x = max(box_min.x, min(point.x, box_max.x))
+    y = max(box_min.y, min(point.y, box_max.y))
+    return Vector2(x, y)
+
 def bezier(a, b, c, d, t):
     ab = a.lerp(b, t)
     bc = b.lerp(c, t)

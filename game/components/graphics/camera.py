@@ -3,6 +3,7 @@ from pygame.math import Vector2
 from game.ecs import Component
 from game.constants import PPU, WIDTH_UNITS, HEIGHT_UNITS
 from ..physics.position import Position
+from game.utils import closest_point_in_box
 
 SCREEN_WIDTH = WIDTH_UNITS * PPU
 SCREEN_HEIGHT = HEIGHT_UNITS * PPU
@@ -16,6 +17,8 @@ class Camera(Component):
         self.target = target
         self.speed = speed
         self.requirements = [Position]
+        self.offset = Vector2(0, 2)
+        self.box = Vector2(2, 2)
     
     def set_target(self, entity):
         self.target = target
@@ -23,7 +26,7 @@ class Camera(Component):
     def to_screen(self, pos):
         """scale and apply camera offset to given position; also handles flipping y for you"""
         
-        pos = pos * PPU
+        pos = (pos - self.offset) * PPU
         pos = pos - self.get_component(Position).pos * PPU
         pos = pos.elementwise() * Vector2(1, -1)
         pos = pos + Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
@@ -39,7 +42,11 @@ class Camera(Component):
             return
         
         target_pos = target_pos.pos
+        pos_comp = self.get_component(Position)
+        camera_pos = pos_comp.pos
 
-        pos = self.get_component(Position)
+        target_pos = closest_point_in_box(camera_pos, target_pos, self.box)
 
-        pos.set_pos(pos.pos + (target_pos - pos.pos) * self.speed)
+
+        pos_comp.set_pos(camera_pos + (target_pos - camera_pos) * self.speed)
+
