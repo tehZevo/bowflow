@@ -118,16 +118,13 @@ class Game:
         
     async def run(self):
         while True:
-            # clock = pygame.time.Clock()
             last_time = time.time()
             t = 0
             while not self.interrupt_loop:
-                # time_delta = clock.tick(60)/1000.0
                 self.canvas.fill((200, 200, 200))
                 t += 0.01
                 if t > 1:
                     t = 0
-                #self.bar.set_percent(t)
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         pygame.quit()
@@ -150,7 +147,8 @@ class Game:
                 pygame.display.update()
                 dt = time.time() - last_time
                 last_time = time.time()
-                await asyncio.sleep(DT - dt) #TODO: uncap framerate?
+
+                await asyncio.sleep(max(0, DT - dt)) #TODO: uncap framerate?
                 # await asyncio.sleep(0)
 
             #change maps

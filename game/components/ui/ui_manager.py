@@ -1,11 +1,8 @@
 
 from game.ecs import Component
 from game.components.key_bind_listener import KeyBindListener
-from game.components.ui.menu import Menu
-from game.components.ui.menu_items.lambda_item import LambdaItem
-from game.components.ui.menu_items.close_item import CloseItem
 from game.components.game_master import GameMaster
-from game.components.actor.player import Player
+from game.components.ui.main_menu import MainMenu
 
 class UIManager(Component, KeyBindListener):
     def __init__(self):
@@ -27,17 +24,13 @@ class UIManager(Component, KeyBindListener):
 
         if "back" in binds.pressed_actions:
             #open menu
-            #TODO: improve experience of getting player
-            player = self.world.get_all_components(GameMaster)[0].game.world.get_all_components(Player)[0]
-
-            give_exp_item = LambdaItem("Exp me!", lambda menu: player.give_exp(100))
-            self.menu = Menu([
-                give_exp_item,
-                CloseItem(),
-            ])
-            self.open_menu(self.menu)
+            menu = MainMenu()
+            self.open_menu(menu)
             
     def open_menu(self, menu):
+        game = self.world.get_all_components(GameMaster)[0].game
+        game.paused = True
+        
         self.world.create_entity([menu])
         self.menu_stack.append(menu)
         menu.create()

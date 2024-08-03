@@ -1,16 +1,13 @@
-import math
-
-import pygame
 from pygame.math import Vector2
 
 from game.ecs import Component
-from game.constants import PPU
 from ..physics.position import Position
-from game.components.ui.ui_bar import UIBar
 from game.components.ui.text import Text
 from game.components.ui.box import Box
-from game.components.game_master import GameMaster
 from game.components.key_bind_listener import KeyBindListener
+
+#TODO: i think actual menu impls should be game data and not components..
+# the instance of a menu in the ui world can be a component though
 
 class Menu(Component, KeyBindListener):
     def __init__(self, items=[], cancelable=True):
@@ -55,10 +52,6 @@ class Menu(Component, KeyBindListener):
         pass
     
     def create(self):
-        #TODO: intercept input
-        game = self.world.get_all_components(GameMaster)[0].game
-        game.paused = True
-
         box = self.world.create_entity([
             Box(Vector2(0, 0), Vector2(10, 16)),
         ])
