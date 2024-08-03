@@ -1,8 +1,11 @@
 from pygame.math import Vector2
 
 from game.ecs import Component
-from game.constants import PPU
+from game.constants import PPU, WIDTH_UNITS, HEIGHT_UNITS
 from ..physics.position import Position
+
+SCREEN_WIDTH = WIDTH_UNITS * PPU
+SCREEN_HEIGHT = HEIGHT_UNITS * PPU
 
 class Camera(Component):
     def __init__(self, target=None, speed=0.1):
@@ -23,8 +26,7 @@ class Camera(Component):
         pos = pos * PPU
         pos = pos - self.get_component(Position).pos * PPU
         pos = pos.elementwise() * Vector2(1, -1)
-        pos = pos + Vector2(1280 / 2, 720 / 2) #TODO: hardcoded screen size (pass screen in instead)
-        #TODO: subtract half screen width/height
+        pos = pos + Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
 
         return pos
 

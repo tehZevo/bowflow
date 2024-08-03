@@ -19,7 +19,7 @@ class Wall(Renderable):
         start = camera.to_screen(self.start)
         end = camera.to_screen(self.end)
         pygame.draw.line(screen, (255, 0, 0), start, end)
-        pygame.draw.circle(screen, (255, 0, 0), start, 8, width=0)
-        pygame.draw.circle(screen, (255, 0, 0), end, 8, width=0)
+        pygame.draw.circle(screen, (255, 0, 0), start, 3, width=0)
+        pygame.draw.circle(screen, (255, 0, 0), end, 3, width=0)
 
         #TODO: draw direction indicator

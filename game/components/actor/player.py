@@ -29,8 +29,8 @@ class Player(Component, LevelUpListener, KeyBindListener):
     
     def init(self):
         sprite = self.get_component(Sprite)
-        sprite.set_image("player.png")
-        sprite.offset = Vector2(-1/2, -1)
+        sprite.set_image("game/assets/images/player.png")
+        sprite.anchor_bottom()
     
     def attempt_interact(self):
         my_pos = self.get_component(Position).pos

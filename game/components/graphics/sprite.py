@@ -15,15 +15,21 @@ class Sprite(Renderable):
 
         self.offset = Vector2() if offset is None else offset
         self.requirements = [Position]
+        self.flip_x = False
+        self.flip_y = False
     
     def set_image(self, image_path):
         self.image = pygame.image.load(image_path)
-        # self.image = pygame.transform.scale(self.image, (PPU, PPU))
+    
+    def anchor_bottom(self):
+        height_units = self.image.get_height() / PPU
+        width_units = self.image.get_width() / PPU
+        self.offset = Vector2(-width_units / 2, -height_units)
     
     def render(self, screen, camera=None):
         if self.image is None:
             return
-
+        
         pos = self.get_component(Position).pos
         offset = self.offset
         
@@ -32,4 +38,4 @@ class Sprite(Renderable):
             offset = self.offset * PPU
 
         rect = pygame.Rect(pos.x + offset.x, pos.y + offset.y, 0, 0)
-        screen.blit(self.image, rect)
+        screen.blit(pygame.transform.flip(self.image, self.flip_x, self.flip_y), rect)

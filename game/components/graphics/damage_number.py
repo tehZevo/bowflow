@@ -7,8 +7,8 @@ from ..graphics.renderable import Renderable
 
 from game.constants import DT, PPU
 
-SEPARATION = 24
-STACK_SEPARATION = 48
+SEPARATION = 6
+STACK_SEPARATION = 12
 DAMAGE_NUMBER_TIME = 3
 DAMAGE_NUMBER_HEIGHT = 1
 
@@ -63,7 +63,7 @@ class DamageNumber(Renderable):
         if camera is not None:
             pos = camera.to_screen(pos)
 
-        for x, image in enumerate(self.images):
+        for x, image in reversed(list(enumerate(self.images))):
             rect = pygame.Rect(
                 pos.x + x * SEPARATION - len(self.images) / 2 * SEPARATION,
                 pos.y - self.stack * STACK_SEPARATION,

@@ -27,8 +27,8 @@ class Monster(Component, DamageListener, DeathListener):
     def init(self):
         self.get_component(Physics).stay_on_footholds = True
         sprite = self.get_component(Sprite)
-        sprite.set_image("monster.png")
-        sprite.offset = Vector2(-1/2, -1)
+        sprite.set_image("game/assets/images/slime.png")
+        sprite.anchor_bottom()
 
     def on_damage(self, amount, source):
         self.target = source

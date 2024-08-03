@@ -23,4 +23,4 @@ class Rope(Renderable):
         top = camera.to_screen(self.top)
         bottom = camera.to_screen(self.bottom)
         pygame.draw.line(screen, (0, 128, 0), top, bottom)
-        pygame.draw.circle(screen, (0, 128, 0), top, 8, width=0)
+        pygame.draw.circle(screen, (0, 128, 0), top, 3, width=0)

@@ -3,6 +3,7 @@ from pygame.math import Vector2
 from game.ecs import Component
 from game.data.stats import Stats
 from ..physics.physics import Physics
+from ..graphics.sprite import Sprite
 from ..physics.position import Position
 from .damage_listener import DamageListener
 from .death_listener import DeathListener
@@ -19,7 +20,7 @@ class Actor(Component, PhysicsStateListener):
         self.facing_dir = 1
 
         self.stats = Stats(hp=100, mp=100)
-        self.requirements = [Physics]
+        self.requirements = [Physics, Sprite]
     
     def on_physics_state_changed(self, state):
         #cancel current action when entering rope state
@@ -64,6 +65,8 @@ class Actor(Component, PhysicsStateListener):
             self.next_action = action
             
     def update(self):
+        self.get_component(Sprite).flip_x = self.facing_dir < 0
+        
         if self.stats.hp <= 0:
             for listener in self.entity.get_all_components(DeathListener):
                 listener.on_death()
