@@ -14,6 +14,7 @@ from game.components.key_bind_monitor import KeyBindMonitor
 from game.components.player_spawn import PlayerSpawn
 from game.components.game_master import GameMaster
 from game.components.ui.hud import HUD
+from game.components.graphics.text_box import TextBox
 from game.components.graphics.cp437_text import CP437Text
 from game.constants import DT
 from game.data.skill_tree import SkillTree
@@ -106,8 +107,13 @@ class Game:
 
         self.camera_comp = self.camera.get_component(Camera)
 
+        self.world.create_entity([
+            TextBox(),
+        ])
+
         text = self.world.create_entity([
-            Position(Vector2(2, -10)),
+            #Position(Vector2(2, -10)),
+            Position(Vector2(8, 8)),
             CP437Text("Hello World!", color=(0, 255, 0), shadow_color=(0, 0, 0))
         ])
 

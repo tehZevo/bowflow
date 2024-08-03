@@ -8,6 +8,8 @@ from ..physics.position import Position
 from .renderable import Renderable
 from game.utils import tint
 
+#TODO: move to ui
+
 def text_to_cp437(text):
     coords = []
     for char in text:
@@ -45,8 +47,8 @@ class CP437Text(Renderable):
     def render(self, screen, camera=None):
         pos = self.get_component(Position).pos
         
-        if camera is not None:
-            pos = camera.to_screen(pos)
+        # if camera is not None:
+        #     pos = camera.to_screen(pos)
 
         coords = text_to_cp437(self.text)
 
