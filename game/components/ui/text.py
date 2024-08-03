@@ -5,10 +5,8 @@ from pygame.math import Vector2
 
 from game.constants import PPU
 from ..physics.position import Position
-from .renderable import Renderable
+from game.components.graphics.renderable import Renderable
 from game.utils import tint
-
-#TODO: move to ui
 
 def text_to_cp437(text):
     coords = []
@@ -20,8 +18,8 @@ def text_to_cp437(text):
     
     return coords
 
-class CP437Text(Renderable):
-    def __init__(self, text, color=(255, 255, 255), shadow_color=None, shadow_offset=Vector2(1, 1)):
+class Text(Renderable):
+    def __init__(self, text, color=(0, 0, 0), shadow_color=None, shadow_offset=Vector2(1, 1)):
         super().__init__()
         self.image = pygame.image.load("game/assets/images/cp437.png")
         self.text = text

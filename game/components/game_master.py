@@ -7,3 +7,5 @@ class GameMaster(Component):
         super().__init__()
         
         self.game = game
+    
+    

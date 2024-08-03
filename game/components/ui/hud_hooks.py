@@ -24,6 +24,7 @@ class HudHooks(Component, DamageListener, DeathListener, StatsListener, LevelUpL
     def on_player_data_changed(self, player_data):
         exp_tnl = calc_player_exp(player_data.level)
         self.hud.exp_bar.set_percent(player_data.exp / exp_tnl)
+        self.hud.exp_text.text = f"{player_data.exp}/{exp_tnl}"
     
     def on_level_up(self, leve):
         #TODO?

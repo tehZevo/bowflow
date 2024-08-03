@@ -3,7 +3,6 @@ import asyncio
 
 import pygame, sys
 from pygame.math import Vector2
-# import pygame_gui
 
 from game.ecs import World
 from game.components.physics import Physics, Position, Foothold
@@ -13,9 +12,10 @@ from game.components.actor import Player
 from game.components.key_bind_monitor import KeyBindMonitor
 from game.components.player_spawn import PlayerSpawn
 from game.components.game_master import GameMaster
+from game.components.ui.ui_manager import UIManager
 from game.components.ui.hud import HUD
-from game.components.graphics.text_box import TextBox
-from game.components.graphics.cp437_text import CP437Text
+from game.components.ui.box import Box
+from game.components.ui.text import Text
 from game.constants import DT
 from game.data.skill_tree import SkillTree
 from game.data.player_data import PlayerData
@@ -26,13 +26,13 @@ from game.constants import PPU, WIDTH_UNITS, HEIGHT_UNITS, SCREEN_SCALE
 class Game:
     def __init__(self):
         self.interrupt_loop = False
+        self.paused = False
     
     def setup(self):
         pygame.init()
         self.screen = pygame.display.set_mode((WIDTH_UNITS * PPU * SCREEN_SCALE, HEIGHT_UNITS * PPU * SCREEN_SCALE))
         self.canvas = pygame.surface.Surface((WIDTH_UNITS * PPU, HEIGHT_UNITS * PPU))
         pygame.display.set_caption("Project Bow Flow")
-        # self.ui_manager = pygame_gui.UIManager((1280, 640), "game/assets/theme.json")
 
         self.player_data = PlayerData(
             skill_binds = {
@@ -51,6 +51,8 @@ class Game:
                 # pygame.K_k: "keys", #TODO: action bindings
                 pygame.K_l: "skills",
                 pygame.K_SPACE: "interact",
+                pygame.K_ESCAPE: "back",
+                pygame.K_RETURN: "select",
             },
             skill_allocations={
                 "magibolt": 1,
@@ -67,8 +69,20 @@ class Game:
 
         #skill_window = SkillTreeWindow(self.skill_tree, self.player_data)
 
-        # self.hud = Hud()
+        self.ui_world = World()
+        
+        self.ui_world.create_entity([GameMaster(self)])
 
+        self.ui_world.create_entity([
+            KeyBindMonitor(self.player_data),
+            UIManager(),
+        ])
+
+        self.hud = HUD()
+        self.ui_world.create_entity([
+            self.hud
+        ])
+        
         self.create_new_world()
 
     #TODO: accept mapdef param
@@ -79,17 +93,12 @@ class Game:
         self.world = World()
 
         self.world.create_entity([
-            GameMaster(self)
+            GameMaster(self),
         ])
-        
+
         generate_floor(self.world)
 
         player_comp = Player(self.player_data)
-        
-        self.hud = HUD()
-        self.world.create_entity([
-            self.hud
-        ])
 
         self.player = self.world.create_entity([
             Position(Vector2(1, 1)),
@@ -106,17 +115,7 @@ class Game:
         self.player.get_component(Physics).move_to_foothold(spawn_foothold)
 
         self.camera_comp = self.camera.get_component(Camera)
-
-        self.world.create_entity([
-            TextBox(),
-        ])
-
-        text = self.world.create_entity([
-            #Position(Vector2(2, -10)),
-            Position(Vector2(8, 8)),
-            CP437Text("Hello World!", color=(0, 255, 0), shadow_color=(0, 0, 0))
-        ])
-
+        
     async def run(self):
         while True:
             # clock = pygame.time.Clock()
@@ -134,18 +133,17 @@ class Game:
                         pygame.quit()
                         sys.exit()
 
-                    # self.ui_manager.process_events(event)
-
-                # self.ui_manager.update(DT)
-
-                self.world.update()
+                if not self.paused:
+                    self.world.update()
+                self.ui_world.update()
 
                 #TODO: use sprite batches in the future for performance boost
                 for renderable in self.world.get_all_components(Renderable):
                     renderable.render(self.canvas, self.camera_comp)
                 
-                # self.ui_manager.draw_ui(self.screen)
-                
+                for renderable in self.ui_world.get_all_components(Renderable):
+                    renderable.render(self.canvas)
+
                 scaled_canvas = pygame.transform.scale(self.canvas, self.screen.get_size())
                 self.screen.blit(scaled_canvas, (0, 0))
 

@@ -5,11 +5,8 @@ from pygame.math import Vector2
 
 from game.constants import PPU
 from ..physics.position import Position
-from .renderable import Renderable
+from game.components.graphics.renderable import Renderable
 from game.utils import tint
-
-#TODO: place at bottom of screen
-#TODO: move to ui
 
 def sprite_coord(x, y, width, height):
     if x == 0 and y == 0: return Vector2(0, 0)
@@ -22,19 +19,19 @@ def sprite_coord(x, y, width, height):
     if y == height - 1: return Vector2(1, 2)
     return Vector2(1, 1)
 
-class TextBox(Renderable):
-    def __init__(self):
+class Box(Renderable):
+    def __init__(self, pos=None, size=None):
         super().__init__()
+        self.pos = Vector2(0, 0) if pos is None else pos
+        self.size = Vector2(32, 6) if size is None else size
         self.image = pygame.image.load("game/assets/images/textbox.png")
         
         self.requirements = [Position]
 
     def render(self, screen, camera=None):
         pos = self.get_component(Position).pos
-        WIDTH = 16
-        HEIGHT = 6
         
-        for y in range(HEIGHT):
-            for x in range(WIDTH):
-                coord = sprite_coord(x, y, WIDTH, HEIGHT)
+        for y in range(int(self.size.y)):
+            for x in range(int(self.size.x)):
+                coord = sprite_coord(x, y, self.size.x, self.size.y)
                 screen.blit(self.image, (x * 8, y * 8, 8, 8), (coord.x * 8, coord.y * 8, 8, 8))

@@ -13,7 +13,7 @@ from game.game import Game
 #- write handler using 0.6.9 logic (listen for events)
 #- just dont use pygame_gui at all
 
-#TODO: pixelate
+#TODO: pixelate in chrome
 # import sys, platform
 # if sys.platform == "emscripten":
 #     platform.window.canvas.style.imageRendering = "pixelated"

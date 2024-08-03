@@ -7,6 +7,7 @@ from game.ecs import Component
 from game.constants import PPU
 from ..physics.position import Position
 from game.components.ui.ui_bar import UIBar
+from game.components.ui.text import Text
 
 HP_BAR_COLOR = (255, 0, 0)
 MP_BAR_COLOR = (0, 0, 255)
@@ -20,6 +21,7 @@ class HUD(Component):
         self.hp_bar = None
         self.mp_bar = None
         self.exp_bar = None
+        self.exp_text = None
     
     def init(self):
         self.hp_bar = UIBar(width=8, color=HP_BAR_COLOR, bg_color=BAR_BG_COLOR)
@@ -38,4 +40,10 @@ class HUD(Component):
         self.world.create_entity([
             Position(Vector2(0, 8)),
             self.exp_bar,
+        ])
+
+        self.exp_text = Text(text="", color=(0, 0, 0))
+        self.world.create_entity([
+            Position(Vector2(128, 8)),
+            self.exp_text,
         ])
