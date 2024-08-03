@@ -10,14 +10,14 @@ from ..graphics.renderable import Renderable
 def tint(surf, tint_color):
     surf = surf.copy().convert_alpha()
     # surf.fill((0, 0, 0, 255), None, pygame.BLEND_RGBA_MULT)
-    # surf.fill((tint_color[0:3] + (0,)), None, pygame.BLEND_RGBA_ADD)
-    surf.fill((255, 0, 0, 255), None, pygame.BLEND_RGBA_MULT)
+    surf.fill((tint_color[0:3] + (255,)), None, pygame.BLEND_RGBA_MULT)
+    # surf.fill((255, 0, 0, 255), None, pygame.BLEND_RGBA_MULT)
     return surf
 
 class UIBar(Renderable):
     def __init__(self, width=8, color=(255, 0, 0), bg_color=(127, 127, 127)):
         super().__init__()
-        self.image = pygame.image.load("game/assets/images/bar-8.png")
+        self.image = pygame.image.load("game/assets/images/bar-8-2.png")
         
         self.width = width
         self.percent = 0
@@ -27,10 +27,10 @@ class UIBar(Renderable):
         self.requirements = [Position]
     
     def set_color(self, color):
-        self.fg_image = self.image#tint(self.image, color)
+        self.fg_image = tint(self.image, color)
     
     def set_bg_color(self, bg_color):
-        self.bg_image = self.image#tint(self.image, bg_color)
+        self.bg_image = tint(self.image, bg_color)
 
     def set_percent(self, percent):
         self.percent = percent
@@ -44,6 +44,8 @@ class UIBar(Renderable):
         self.offset = Vector2(-width_units / 2, -height_units)
     
     def render(self, screen, camera=None):
+        pos = self.get_component(Position).pos
+        
         for cell in range(self.width):
             #determine row from sprite sheet to render
             row = 0 if cell == 0 else 2 if cell == self.width - 1 else 1
@@ -56,5 +58,5 @@ class UIBar(Renderable):
             else:
                 col = math.floor(self.percent * self.width * 9) % 9
             
-            screen.blit(self.bg_image, (8 * cell, 0, 8, 8), (col * 8, row * 8, 8, 8))
-            #screen.blit(self.fg_image, (8 * cell, 0, 8, 8), (8 * 8, row * 8, 8, 8))
+            screen.blit(self.bg_image, (pos.x + 8 * cell, pos.y + 0, 8, 8), (8 * 8, row * 8, 8, 8))
+            screen.blit(self.fg_image, (pos.x + 8 * cell, pos.y + 0, 8, 8), (col * 8, row * 8, 8, 8))

@@ -13,7 +13,8 @@ from game.components.actor import Player
 from game.components.key_bind_monitor import KeyBindMonitor
 from game.components.player_spawn import PlayerSpawn
 from game.components.game_master import GameMaster
-from game.components.ui.ui_bar import UIBar
+# from game.components.ui.ui_bar import UIBar
+from game.components.ui.hud import HUD
 from game.constants import DT
 from game.data.skill_tree import SkillTree
 from game.data.player_data import PlayerData
@@ -96,11 +97,13 @@ class Game:
             Camera(target=self.player)
         ])
 
-        self.bar = UIBar()
+        self.hud = HUD()
         self.world.create_entity([
-            self.bar
+            self.hud
         ])
-        self.bar.set_percent(0)
+        self.hud.hp_bar.set_percent(0.5)
+        self.hud.mp_bar.set_percent(0.5)
+        self.hud.exp_bar.set_percent(0.5)
 
         spawn_foothold = self.world.get_all_components(PlayerSpawn)[0].get_component(Foothold)
         self.player.get_component(Physics).move_to_foothold(spawn_foothold)
@@ -118,7 +121,7 @@ class Game:
                 t += 0.01
                 if t > 1:
                     t = 0
-                self.bar.set_percent(t)
+                #self.bar.set_percent(t)
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         pygame.quit()
