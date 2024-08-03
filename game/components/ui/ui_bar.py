@@ -6,13 +6,7 @@ from pygame.math import Vector2
 from game.constants import PPU
 from ..physics.position import Position
 from ..graphics.renderable import Renderable
-
-def tint(surf, tint_color):
-    surf = surf.copy().convert_alpha()
-    # surf.fill((0, 0, 0, 255), None, pygame.BLEND_RGBA_MULT)
-    surf.fill((tint_color[0:3] + (255,)), None, pygame.BLEND_RGBA_MULT)
-    # surf.fill((255, 0, 0, 255), None, pygame.BLEND_RGBA_MULT)
-    return surf
+from game.utils import tint
 
 class UIBar(Renderable):
     def __init__(self, width=8, color=(255, 0, 0), bg_color=(127, 127, 127)):

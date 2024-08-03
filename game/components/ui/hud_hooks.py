@@ -17,17 +17,13 @@ class HudHooks(Component, DamageListener, DeathListener, StatsListener, LevelUpL
         pass
 
     def on_stats_changed(self, stats):
-        #TODO
-        self.hud.hp_bar.max_value = stats.max_hp
-        self.hud.hp_bar.update(stats.hp)
-        self.hud.mp_bar.max_value = stats.max_mp
-        self.hud.mp_bar.update(stats.mp)
+        print("hey", stats)
+        self.hud.hp_bar.set_percent(stats.hp / stats.max_hp)
+        self.hud.mp_bar.set_percent(stats.mp / stats.max_mp)
     
     def on_player_data_changed(self, player_data):
         exp_tnl = calc_player_exp(player_data.level)
-        self.hud.exp_bar.max_value = exp_tnl
-        self.hud.exp_bar.update(player_data.exp)
-        self.hud.level_label.update(player_data.level)
+        self.hud.exp_bar.set_percent(player_data.exp / exp_tnl)
     
     def on_level_up(self, leve):
         #TODO?

@@ -31,6 +31,8 @@ class Player(Component, LevelUpListener, KeyBindListener):
         sprite = self.get_component(Sprite)
         sprite.set_image("game/assets/images/player.png")
         sprite.anchor_bottom()
+
+        self.alert_player_data_listeners()
     
     def attempt_interact(self):
         my_pos = self.get_component(Position).pos
@@ -39,7 +41,6 @@ class Player(Component, LevelUpListener, KeyBindListener):
             dist = my_pos.distance_to(other_pos)
             if dist < INTERACT_RADIUS:
                 interactable.on_interact(self.entity)
-                break
 
     def on_key_binds(self, binds):
         phys = self.get_component(Physics)
@@ -90,7 +91,11 @@ class Player(Component, LevelUpListener, KeyBindListener):
         self.world.create_entity([
             LevelUpEffect(self.entity)
         ])
-        
+    
+    def alert_player_data_listeners(self):
+        for listener in self.entity.get_all_components(PlayerDataListener):
+            listener.on_player_data_changed(self.player_data)
+
     def give_exp(self, exp):
         print(f"+{exp} exp")
         self.player_data.exp += exp
@@ -103,8 +108,7 @@ class Player(Component, LevelUpListener, KeyBindListener):
             for listener in self.entity.get_all_components(LevelUpListener):
                 listener.on_level_up(self.player_data.level)
         
-        for listener in self.entity.get_all_components(PlayerDataListener):
-            listener.on_player_data_changed(self.player_data)
+        self.alert_player_data_listeners()
         
     def use_skill(self, skill_name, move_dir):
         actor = self.get_component(Actor)

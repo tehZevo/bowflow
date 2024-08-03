@@ -1,5 +1,6 @@
 from math import log10, floor
 
+import pygame
 from pygame.math import Vector2
 
 def round_sigfigs(x, figs):
@@ -7,6 +8,11 @@ def round_sigfigs(x, figs):
 
 def point_in_aabb(point, min, max):
     return point.x >= min.x and point.x < max.x and point.y >= min.y and point.y < max.y
+
+def tint(surf, tint_color):
+    surf = surf.copy().convert_alpha()
+    surf.fill((tint_color[0:3] + (255,)), None, pygame.BLEND_RGBA_MULT)
+    return surf
 
 def intersect(p1, p2, p3, p4):
     denom = (p4.y - p3.y) * (p2.x - p1.x) - (p4.x - p3.x) * (p2.y-p1.y)

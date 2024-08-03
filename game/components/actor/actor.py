@@ -19,9 +19,16 @@ class Actor(Component, PhysicsStateListener):
         self.next_action = None
         self.facing_dir = 1
 
-        self.stats = Stats(hp=100, mp=100)
+        self.stats = Stats(hp=100, mp=100, max_hp=100, max_mp=100)
         self.requirements = [Physics, Sprite]
     
+    def alert_stat_listeners(self):
+        for listener in self.entity.get_all_components(StatsListener):
+            listener.on_stats_changed(self.stats)
+
+    def init(self):
+        self.alert_stat_listeners()
+
     def on_physics_state_changed(self, state):
         #cancel current action when entering rope state
         if state.physics.on_rope:
@@ -33,8 +40,7 @@ class Actor(Component, PhysicsStateListener):
         for listener in self.entity.get_all_components(DamageListener):
             listener.on_damage(amount, source)
         
-        for listener in self.entity.get_all_components(StatsListener):
-            listener.on_stats_changed(self.stats)
+        self.alert_stat_listeners()
     
     def begin_action(self, action):
         self.action = action

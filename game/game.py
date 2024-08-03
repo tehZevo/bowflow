@@ -8,19 +8,18 @@ from pygame.math import Vector2
 from game.ecs import World
 from game.components.physics import Physics, Position, Foothold
 from game.components.graphics import Renderable, Camera
-# from game.components.ui import HudHooks
+from game.components.ui import HudHooks
 from game.components.actor import Player
 from game.components.key_bind_monitor import KeyBindMonitor
 from game.components.player_spawn import PlayerSpawn
 from game.components.game_master import GameMaster
-# from game.components.ui.ui_bar import UIBar
 from game.components.ui.hud import HUD
+from game.components.graphics.cp437_text import CP437Text
 from game.constants import DT
 from game.data.skill_tree import SkillTree
 from game.data.player_data import PlayerData
 from game.map.floor_generator import generate_floor
 from game.ui.skill_tree_window import SkillTreeWindow
-# from game.ui.hud import Hud
 from game.constants import PPU, WIDTH_UNITS, HEIGHT_UNITS, SCREEN_SCALE
 
 class Game:
@@ -86,9 +85,14 @@ class Game:
 
         player_comp = Player(self.player_data)
         
+        self.hud = HUD()
+        self.world.create_entity([
+            self.hud
+        ])
+
         self.player = self.world.create_entity([
             Position(Vector2(1, 1)),
-            # HudHooks(self.hud),
+            HudHooks(self.hud),
             KeyBindMonitor(self.player_data),
             player_comp,
         ])
@@ -97,18 +101,15 @@ class Game:
             Camera(target=self.player)
         ])
 
-        self.hud = HUD()
-        self.world.create_entity([
-            self.hud
-        ])
-        self.hud.hp_bar.set_percent(0.5)
-        self.hud.mp_bar.set_percent(0.5)
-        self.hud.exp_bar.set_percent(0.5)
-
         spawn_foothold = self.world.get_all_components(PlayerSpawn)[0].get_component(Foothold)
         self.player.get_component(Physics).move_to_foothold(spawn_foothold)
 
         self.camera_comp = self.camera.get_component(Camera)
+
+        text = self.world.create_entity([
+            Position(Vector2(2, -10)),
+            CP437Text("Hello World!", color=(0, 255, 0), shadow_color=(0, 0, 0))
+        ])
 
     async def run(self):
         while True:
