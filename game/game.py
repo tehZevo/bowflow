@@ -13,6 +13,7 @@ from game.components.actor import Player
 from game.components.key_bind_monitor import KeyBindMonitor
 from game.components.player_spawn import PlayerSpawn
 from game.components.game_master import GameMaster
+from game.components.ui.ui_bar import UIBar
 from game.constants import DT
 from game.data.skill_tree import SkillTree
 from game.data.player_data import PlayerData
@@ -95,6 +96,12 @@ class Game:
             Camera(target=self.player)
         ])
 
+        self.bar = UIBar()
+        self.world.create_entity([
+            self.bar
+        ])
+        self.bar.set_percent(0)
+
         spawn_foothold = self.world.get_all_components(PlayerSpawn)[0].get_component(Foothold)
         self.player.get_component(Physics).move_to_foothold(spawn_foothold)
 
@@ -104,11 +111,14 @@ class Game:
         while True:
             # clock = pygame.time.Clock()
             last_time = time.time()
+            t = 0
             while not self.interrupt_loop:
                 # time_delta = clock.tick(60)/1000.0
-                #self.screen.fill((200, 200, 200))
                 self.canvas.fill((200, 200, 200))
-
+                t += 0.01
+                if t > 1:
+                    t = 0
+                self.bar.set_percent(t)
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         pygame.quit()
@@ -122,12 +132,11 @@ class Game:
 
                 #TODO: use sprite batches in the future for performance boost
                 for renderable in self.world.get_all_components(Renderable):
-                    #renderable.render(self.screen, self.camera_comp)
                     renderable.render(self.canvas, self.camera_comp)
                 
                 # self.ui_manager.draw_ui(self.screen)
                 
-                scaled_canvas = pygame.transform.scale(self.canvas, self.screen.size)
+                scaled_canvas = pygame.transform.scale(self.canvas, self.screen.get_size())
                 self.screen.blit(scaled_canvas, (0, 0))
 
                 pygame.display.update()
