@@ -9,8 +9,10 @@ from .renderable import Renderable
 from game.constants import DT
 
 #TODO: make spritedef with data for each sprite
+#TODO: split old sprite logic (w/o anims) into "image" class for showing plain images
 class Sprite(Renderable):
     def __init__(self, image_path=None, states=1, frames=1, speed=1, offset=None):
+        """Speed is in cycles per second"""
         super().__init__()
         self.image = None
         self.speed = 1
@@ -64,7 +66,7 @@ class Sprite(Renderable):
             return
         
         self.time += DT
-        if self.time >= 1 / len(self.surfs[0]):
+        if self.time >= 1 / len(self.surfs[0]) / self.speed:
             self.time = 0
             self.frame += 1
             if self.frame >= len(self.surfs[0]):

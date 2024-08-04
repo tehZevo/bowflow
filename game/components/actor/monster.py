@@ -24,6 +24,8 @@ class Monster(Component, DamageListener, DeathListener):
         #TODO: dont hardcode level, use mobdef or something
         self.level = 100
 
+        self.requirements = [Actor, Sprite, Position, Physics]
+
     def init(self):
         self.get_component(Physics).stay_on_footholds = True
         sprite = self.get_component(Sprite)

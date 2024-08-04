@@ -1,15 +1,11 @@
-from pygame.math import Vector2
-
 from game.ecs import Component
 from game.data.stats import Stats
 from ..physics.physics import Physics
 from ..graphics.sprite import Sprite
-from ..physics.position import Position
 from .damage_listener import DamageListener
 from .death_listener import DeathListener
 from .stats_listener import StatsListener
 from ..physics.physics_state_listener import PhysicsStateListener
-from ..graphics.damage_number import DamageNumber
 
 class Actor(Component, PhysicsStateListener):
     def __init__(self):

@@ -1,7 +1,8 @@
 from pygame.math import Vector2
 
 from game.ecs import Component
-from .sprite import Sprite
+#TODO: for now, use image, but eventually, effects will be sprites (because animation)
+from .image import Image
 
 from game.constants import DT, PPU
 
@@ -10,14 +11,16 @@ class Effect(Component):
         super().__init__()
         self.time = time
         self.effect_path = effect_path
+        self.requirements = [Image]
     
     def init(self):
         #TODO: reconsider how offsets are managed for sprites.. this is getting messy
-        sprite = self.get_component(Sprite)
-        sprite.set_image(self.effect_path)
+        image = self.get_component(Image)
+        image.set_image(self.effect_path)
 
-        offset = Vector2(-sprite.image.get_width() / PPU / 2, -sprite.image.get_height() / PPU / 2)
-        sprite.offset = offset
+        #TODO: make image/sprite .anchor_center
+        offset = Vector2(-image.image.get_width() / PPU / 2, -image.image.get_height() / PPU / 2)
+        image.offset = offset
 
     def update(self):
         self.time -= DT

@@ -1,23 +1,23 @@
 from .menu_item import MenuItem
 
-from game.components.graphics.sprite import Sprite
+from game.components.graphics.image import Image
 from game.components.physics.position import Position
 
 class SkillUpgradeItem(MenuItem):
     def __init__(self, skill):
         super().__init__(skill)
         self.skill = skill
-        self.sprite = None
+        self.image = None
         self.bg = None
 
     def create(self, menu, pos):
-        self.sprite = menu.world.create_entity([
+        self.image = menu.world.create_entity([
             Position(pos),
-            Sprite(f"game/assets/images/skills/skill_bg.png")
+            Image(f"game/assets/images/skills/skill_bg.png")
         ])
         self.bg = menu.world.create_entity([
             Position(pos),
-            Sprite(f"game/assets/images/skills/{self.skill}.png")
+            Image(f"game/assets/images/skills/{self.skill}.png")
         ])
 
     def select(self, menu):
@@ -27,5 +27,5 @@ class SkillUpgradeItem(MenuItem):
         player.player_data.upgrade_skill(self.skill)
 
     def destroy(self, menu):
-        self.sprite.remove()
+        self.image.remove()
         self.bg.remove()

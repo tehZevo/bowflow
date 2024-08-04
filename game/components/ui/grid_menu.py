@@ -5,7 +5,7 @@ from ..physics.position import Position
 from game.components.ui.text import Text
 from game.components.ui.box import Box
 from game.components.key_bind_listener import KeyBindListener
-from game.components.graphics.sprite import Sprite
+from game.components.graphics.image import Image
 
 #TODO: wrap
 #TODO: multi-cell items?
@@ -18,7 +18,7 @@ class GridMenu(Component, KeyBindListener):
         self.ents = []
         self.cancelable = cancelable
 
-        self.cursor_sprite = None
+        self.cursor_image = None
 
     def items_sorted_by_axis(self, axis, filter_by, reversed=False):
         entries = [(k[axis], v) for k, v in self.items.items() if k[1 - axis] == filter_by]
@@ -48,7 +48,7 @@ class GridMenu(Component, KeyBindListener):
         
         #update cursor pos
         #TODO: make relative to menu pos
-        self.cursor_sprite.get_component(Position).set_pos(self.cursor_pos * 16)
+        self.cursor_image.get_component(Position).set_pos(self.cursor_pos * 16)
 
     def on_key_binds(self, binds):
         if "move_up" in binds.pressed_actions:
@@ -73,10 +73,10 @@ class GridMenu(Component, KeyBindListener):
         ])
         self.ents.append(box)
 
-        self.cursor_sprite = self.world.create_entity([
-            Sprite("game/assets/images/grid_cursor.png")
+        self.cursor_image = self.world.create_entity([
+            Image("game/assets/images/grid_cursor.png")
         ])
-        self.ents.append(self.cursor_sprite)
+        self.ents.append(self.cursor_image)
 
         for (x, y), item in self.items.items():
             item.create(self, Vector2(x * 16, y * 16))

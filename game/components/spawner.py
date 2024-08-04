@@ -1,12 +1,8 @@
 import random
 
 from game.ecs import Component
-from game.data.exp_calcs import calc_mob_exp
 from game.components.actor.monster import Monster
 from game.components.physics.physics import Physics
-from game.components.physics.position import Position
-from game.components.graphics.sprite import Sprite
-from game.components.actor.actor import Actor
 from game.components.physics.foothold import Foothold
 
 from game.constants import DT
@@ -27,16 +23,9 @@ class Spawner(Component):
         fh = self.get_component(Foothold)
         rand_t = random.random()
         
-        monster = self.world.create_entity([
-            Position(),
-            Physics(),
-            Sprite(),
-            Actor(),
-            Monster(),
-        ])
-
+        #TODO: use mobdef
+        monster = self.world.create_entity([Monster()])
         monster.get_component(Physics).move_to_foothold(fh, rand_t)
-
         self.mobs.append(monster)
 
     def spawn_wave(self):
@@ -52,6 +41,3 @@ class Spawner(Component):
             self.remaining_spawn_time = self.wave_time
         
         self.mobs = [m for m in self.mobs if m.alive]
-        
-        #TODO: remove dead mobs
-            

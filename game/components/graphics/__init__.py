@@ -4,3 +4,4 @@ from .debug_box import DebugBox
 from .effect import Effect
 from .renderable import Renderable
 from .sprite import Sprite
+from .image import Image
