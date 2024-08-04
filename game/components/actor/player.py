@@ -17,6 +17,7 @@ from game.data.skill_list import skill_list
 from game.data.exp_calcs import calc_player_exp, skill_points_per_level
 from game.constants import INTERACT_RADIUS, ROPE_GRAB_DISTANCE, ROPE_REGRAB_DELAY, DT
 from game.components.physics.physics_states.ground_state import GroundState
+import game.sprites
 
 class Player(Component, LevelUpListener, KeyBindListener):
     def __init__(self, player_data):
@@ -29,7 +30,7 @@ class Player(Component, LevelUpListener, KeyBindListener):
     
     def init(self):
         sprite = self.get_component(Sprite)
-        sprite.set_image("game/assets/images/magibowman.png")
+        sprite.set_spritedef(game.sprites.magibowman)
         sprite.anchor_bottom()
 
         self.alert_player_data_listeners()

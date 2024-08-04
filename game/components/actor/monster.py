@@ -13,6 +13,7 @@ from ..physics.position import Position
 from .actor import Actor
 from .damage_listener import DamageListener
 from .death_listener import DeathListener
+import game.sprites
 
 class Monster(Component, DamageListener, DeathListener):
     def __init__(self):
@@ -30,7 +31,7 @@ class Monster(Component, DamageListener, DeathListener):
         self.get_component(Physics).stay_on_footholds = True
         sprite = self.get_component(Sprite)
         #sprite.set_image("game/assets/images/slime.png")
-        sprite.set_image("game/assets/images/slime_walk.png", 1, 4)
+        sprite.set_spritedef(game.sprites.slime)
         sprite.anchor_bottom()
 
     def on_damage(self, amount, source):
