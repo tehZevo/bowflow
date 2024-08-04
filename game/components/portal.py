@@ -14,6 +14,7 @@ class Portal(Component, Interactable):
     def init(self):
         sprite = self.get_component(Sprite)
         sprite.set_image("game/assets/images/portal.png")
+        sprite.anchor_bottom()
 
     def on_interact(self, entity):
         self.world.get_all_components(GameMaster)[0].game.change_map()

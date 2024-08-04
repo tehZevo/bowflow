@@ -4,14 +4,15 @@ from pygame.math import Vector2
 from ..graphics import Renderable
 
 class Foothold(Renderable):
-    def __init__(self, start, end, prev=None, next=None):
+    def __init__(self, start, end, prev=None, next=None, allow_jump_down=True):
         super().__init__()
 
         self.start = start
         self.end = end
         self.prev = prev
         self.next = next
-        #TODO: parameter for allowing jump down or not
+        #TODO: use this in physics
+        self.allow_jump_down = allow_jump_down
     
     def calc_position(self, foothold_pos):
         return self.start + (self.end - self.start) * foothold_pos

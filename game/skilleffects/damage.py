@@ -27,11 +27,12 @@ class Damage(SkillEffect):
         #TODO: real damage calcs
         damage = 0
         for i, delay in enumerate(self.delays):
-            damage += self.power * (1 + random.random() * 0.2 - 0.1)
-
+            damage_line = self.power * (1 + random.random() * 0.2 - 0.1)
+            
+            damage += damage_line
             skill.world.create_entity([
                 Position(skill.target.get_component(Position).pos + Vector2(0, 2)),
-                DamageNumber(damage, stack=i, delay=delay),
+                DamageNumber(damage_line, stack=i, delay=delay),
             ])
 
         actor.damage(damage, skill.caster)
