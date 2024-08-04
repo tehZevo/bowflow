@@ -12,30 +12,6 @@ from game.map.objects.foothold_chain import FootholdChain
 from game.map.mapdef import MapDef
 from game.utils import bezier
 
-# def foothold_chain(world, points):
-#     if len(points) < 2:
-#         return
-    
-#     start = points[0]
-#     footholds = []
-
-#     last_foothold = None
-    
-#     for end in points[1:]:
-#         fh_comp = Foothold(start, end)
-
-#         if last_foothold is not None:
-#             fh_comp.prev = last_foothold
-#             last_foothold.next = fh_comp
-
-#         foothold = world.create_entity([fh_comp])
-#         last_foothold = fh_comp
-#         footholds.append(foothold)
-        
-#         start = end
-    
-#     return footholds
-
 #TODO: reimpl as class that extends FootholdChain
 # def foothold_bezier(world, a, b, c, d, num_points=10):
 #     ts = [i / (num_points - 1) for i in range(num_points)] #TODO: confirm -1 is correct
@@ -56,7 +32,7 @@ def generate_floor(world):
 
     # foothold_bezier(world, Vector2(20, 1), Vector2(23, -1), Vector2(28, 1), Vector2(30, 3))
 
-    stack_footholds = FootholdStack(Vector2(2, 0), Vector2(48, 20), 4, 2, with_spawners=True).create(world, mapdef)
+    stack_footholds = FootholdStack(Vector2(2, 0), Vector2(48, 20), 3, 2, with_spawners=True).create(world, mapdef)
     
     floor.add_component(PlayerSpawn())
     portal_pos = stack_footholds[-1].get_component(Foothold).calc_position(random.random())

@@ -75,7 +75,6 @@ class Player(Component, LevelUpListener, KeyBindListener):
             actor.act(JumpOffRope(self.move_dir))
         
         if phys.on_rope and "jump" in binds.held_actions and self.climb_dir > 0:
-            print("ascend")
             self.use_skill("ascend", self.move_dir)
         
         if phys.on_ground and "interact" in binds.pressed_actions:

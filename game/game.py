@@ -112,6 +112,7 @@ class Game:
         self.player.get_component(Physics).move_to_foothold(spawn_foothold)
 
         self.camera_comp = self.camera.get_component(Camera)
+        self.camera.get_component(Position).set_pos(self.player.get_component(Position).pos)
         
     async def run(self):
         while True:

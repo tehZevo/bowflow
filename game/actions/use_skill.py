@@ -24,10 +24,17 @@ class UseSkill(Action):
         if self.locked:
             self.done = True
             return
+
+        for req in self.skilldef.requirements:
+            if not req.can_use(entity):
+                self.done = True
+                return
             
         #physics state checks, bail if failed
 
         #ground/air checks
+        #TODO: turn these into skillreqs!
+        #TODO: how to not have to provide a default requirement list with the physics check every time...?
         phys = entity.get_component(Physics)
         if not self.skilldef.in_air and phys.in_air:
             self.done = True

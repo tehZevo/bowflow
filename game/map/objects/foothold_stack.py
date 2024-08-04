@@ -30,9 +30,6 @@ class FootholdStack(MapObject):
                 *([Spawner()] if self.with_spawners else []),
             ])
             footholds.append(foothold)
-            
-            # if i == 0:
-            #     continue
 
             for _ in range(self.ropes_per_platform):
                 rope_pos = start + (end - start) * random.random()

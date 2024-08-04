@@ -54,6 +54,17 @@ class Physics(Component):
                 self.state.force += force.x
             case RopeState():
                 self.state.vel += force.y
+    
+    def zero_vel(self, x=False, y=False):
+        """Zeroes the provided component(s) of velocity; ignores components for which the state doesn't use"""
+        match self.state:
+            case AirState():
+                if x: self.state.vel.x = 0
+                if y: self.state.vel.y = 0
+            case GroundState():
+                if x: self.state.vel = 0
+            case RopeState():
+                if y: self.state.vel = 0
 
     def dislodge(self, keep_vel=True, ignore_last_foothold=False):
         """Detatch from foothold"""
