@@ -20,7 +20,6 @@ from game.constants import DT
 from game.data.skill_tree import SkillTree
 from game.data.player_data import PlayerData
 from game.map.floor_generator import generate_floor
-from game.ui.skill_tree_window import SkillTreeWindow
 from game.constants import PPU, WIDTH_UNITS, HEIGHT_UNITS, SCREEN_SCALE
 
 class Game:

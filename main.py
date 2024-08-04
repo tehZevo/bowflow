@@ -2,7 +2,6 @@ import asyncio
 import math
 
 import pygame
-import pygame_gui
 import i18n
 
 from game.game import Game

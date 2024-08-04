@@ -15,7 +15,7 @@ class SkillUpgradeItem(MenuItem):
             Position(pos),
             Sprite(f"game/assets/images/skills/skill_bg.png")
         ])
-        self.sprite = menu.world.create_entity([
+        self.bg = menu.world.create_entity([
             Position(pos),
             Sprite(f"game/assets/images/skills/{self.skill}.png")
         ])

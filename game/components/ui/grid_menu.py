@@ -92,6 +92,6 @@ class GridMenu(Component, KeyBindListener):
             ent.remove()
         
         for item in self.items.values():
-            item.destroy()
+            item.destroy(self)
             
         self.entity.remove()
