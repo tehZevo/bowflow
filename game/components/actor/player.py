@@ -29,7 +29,7 @@ class Player(Component, LevelUpListener, KeyBindListener):
     
     def init(self):
         sprite = self.get_component(Sprite)
-        sprite.set_image("game/assets/images/player.png")
+        sprite.set_image("game/assets/images/magibowman.png")
         sprite.anchor_bottom()
 
         self.alert_player_data_listeners()
