@@ -6,8 +6,9 @@ from game.components.game_master import GameMaster
 
 #TODO: use mapdef
 class Portal(Component, Interactable):
-    def __init__(self):
+    def __init__(self, target_mapdef):
         super().__init__()
+        self.target_mapdef = target_mapdef
 
         self.requirements = [Image]
     
@@ -17,4 +18,4 @@ class Portal(Component, Interactable):
         image.anchor_bottom()
 
     def on_interact(self, entity):
-        self.world.get_all_components(GameMaster)[0].game.change_map()
+        self.world.get_all_components(GameMaster)[0].game.change_map(self.target_mapdef)

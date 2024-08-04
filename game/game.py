@@ -19,7 +19,7 @@ from game.components.ui.text import Text
 from game.constants import DT
 from game.data.skill_tree import SkillTree
 from game.data.player_data import PlayerData
-from game.map.floor_generator import generate_floor
+from game.map.beach import beach
 from game.constants import PPU, WIDTH_UNITS, HEIGHT_UNITS, SCREEN_SCALE
 
 class Game:
@@ -80,20 +80,18 @@ class Game:
             self.hud
         ])
         
-        self.create_new_world()
+        self.create_new_world(beach)
 
-    #TODO: accept mapdef param
-    def change_map(self):
+    def change_map(self, mapdef):
+        self.next_mapdef = mapdef
         self.interrupt_loop = True
 
-    def create_new_world(self):
+    def create_new_world(self, mapdef):
         self.world = World()
 
-        self.world.create_entity([
-            GameMaster(self),
-        ])
+        self.world.create_entity([GameMaster(self)])
 
-        generate_floor(self.world)
+        mapdef.generate(self.world)
 
         player_comp = Player(self.player_data)
 
@@ -104,9 +102,7 @@ class Game:
             player_comp,
         ])
 
-        self.camera = self.world.create_entity([
-            Camera(target=self.player)
-        ])
+        self.camera = self.world.create_entity([Camera(target=self.player)])
 
         spawn_foothold = self.world.get_all_components(PlayerSpawn)[0].get_component(Foothold)
         self.player.get_component(Physics).move_to_foothold(spawn_foothold)
@@ -150,7 +146,8 @@ class Game:
                 # await asyncio.sleep(0)
 
             #change maps
-            self.create_new_world()
+            self.create_new_world(self.next_mapdef)
+            self.next_mapdef = None
             self.interrupt_loop = False
 
             await asyncio.sleep(0)

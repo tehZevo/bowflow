@@ -72,7 +72,6 @@ class Actor(Component, PhysicsStateListener):
         
         #TODO: better way of doing this
         if self.action is None and self.next_action is None and sprite.state != "idle":
-            print("switching to idle")
             sprite.set_state("idle")
         
         if self.stats.hp <= 0:

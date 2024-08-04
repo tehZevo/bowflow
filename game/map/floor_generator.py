@@ -21,14 +21,11 @@ from game.utils import bezier
 
 #TODO: rename to map generator
 #TODO: accept mapdef
-def generate_floor(world):
-    mapdef = MapDef()#TODO
-
+def generate_floor(world, mapdef):
     floor = MapBoundary(Vector2(50, 20)).create(world, mapdef)
 
-    portal = world.create_entity([
-        Portal(),
-    ])
+    #create portal to same mapdef
+    portal = world.create_entity([Portal(mapdef)])
 
     # foothold_bezier(world, Vector2(20, 1), Vector2(23, -1), Vector2(28, 1), Vector2(30, 3))
 
