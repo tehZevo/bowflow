@@ -67,8 +67,6 @@ class Game:
 
         self.skill_tree = SkillTree()
 
-        #skill_window = SkillTreeWindow(self.skill_tree, self.player_data)
-
         self.ui_world = World()
         
         self.ui_world.create_entity([GameMaster(self)])

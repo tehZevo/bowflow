@@ -5,3 +5,9 @@ class MenuItem:
     
     def select(self, menu):
         raise NotImplementedError
+
+    def create(self, menu):
+        pass
+    
+    def destroy(self, menu):
+        pass

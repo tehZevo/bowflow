@@ -24,7 +24,8 @@ class UIManager(Component, KeyBindListener):
 
         if "back" in binds.pressed_actions:
             #open menu
-            menu = MainMenu()
+            #TODO: need a better place to store this
+            menu = MainMenu(self.world.get_all_components(GameMaster)[0].game.skill_tree)
             self.open_menu(menu)
             
     def open_menu(self, menu):

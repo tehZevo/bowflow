@@ -11,11 +11,13 @@ from game.components.actor.player import Player
 from game.components.ui.menu_items.close_item import CloseItem
 from game.components.ui.menu_items.open_menu import OpenMenu
 from game.components.ui.dev_menu import DevMenu
+from game.components.ui.skill_menu import SkillMenu
 
 class MainMenu(Menu):
-    def __init__(self):
+    def __init__(self, skill_tree):
         super().__init__([
             OpenMenu("Dev", lambda menu: DevMenu()),
+            OpenMenu("Skills", lambda menu: SkillMenu(skill_tree)),
             CloseItem(),
         ], cancelable=True)
     

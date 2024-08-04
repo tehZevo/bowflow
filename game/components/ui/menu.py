@@ -13,14 +13,10 @@ class Menu(Component, KeyBindListener):
     def __init__(self, items=[], cancelable=True):
         super().__init__()
         self.items = items
-        self.box = None
         self.cursor_pos = 0
         self.ents = []
         self.item_texts = []
         self.cancelable = cancelable
-    
-    def init(self):
-        pass
     
     def on_key_binds(self, binds):
         if "move_down" in binds.pressed_actions:
@@ -47,10 +43,6 @@ class Menu(Component, KeyBindListener):
     def select(self):
         self.items[self.cursor_pos].select(self)
 
-    def cancel(self):
-        #TODO
-        pass
-    
     def create(self):
         box = self.world.create_entity([
             Box(Vector2(0, 0), Vector2(10, 16)),
@@ -67,6 +59,9 @@ class Menu(Component, KeyBindListener):
         
         self.update_texts()
 
+        for item in self.items:
+            item.create(self)
+
     def close(self):
         #TODO hmm...
         from game.components.ui.ui_manager import UIManager
@@ -78,3 +73,6 @@ class Menu(Component, KeyBindListener):
             ent.remove()
         
         self.entity.remove()
+
+        for item in self.items:
+            item.destroy(self)
