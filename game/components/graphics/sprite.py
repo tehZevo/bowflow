@@ -21,6 +21,13 @@ class Sprite(Renderable):
         self.flip_x = False
         self.flip_y = False
     
+    def set_state(self, state):
+        if state not in self.surfs:
+            print(f"WARNING: state '{state}' not in spritedef")
+            return
+            
+        self.state = state
+            
     def set_spritedef(self, spritedef):
         self.spritedef = spritedef
         self.time = 0

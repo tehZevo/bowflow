@@ -62,7 +62,10 @@ class Monster(Component, DamageListener, DeathListener):
 
     def update_idle(self):
         actor = self.get_component(Actor)
-        actor.act(Move(self.move_dir / 200))
+
+        if self.move_dir != 0:
+            actor.act(Move(self.move_dir / 200))
+        
         
         if random.random() < 1/100:
             self.move_dir = random.randint(-1, 1)
@@ -74,7 +77,8 @@ class Monster(Component, DamageListener, DeathListener):
         
             self.move_dir = -1 if diff.x < 0 else 1
         
-        self.get_component(Actor).act(Move(self.move_dir / 200))
+        if self.move_dir != 0:
+            self.get_component(Actor).act(Move(self.move_dir / 200))
 
     def update(self):
         

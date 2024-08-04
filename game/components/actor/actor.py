@@ -67,7 +67,13 @@ class Actor(Component, PhysicsStateListener):
             self.next_action = action
             
     def update(self):
-        self.get_component(Sprite).flip_x = self.facing_dir < 0
+        sprite = self.get_component(Sprite)
+        sprite.flip_x = self.facing_dir < 0
+        
+        #TODO: better way of doing this
+        if self.action is None and self.next_action is None and sprite.state != "idle":
+            print("switching to idle")
+            sprite.set_state("idle")
         
         if self.stats.hp <= 0:
             for listener in self.entity.get_all_components(DeathListener):
@@ -84,3 +90,4 @@ class Actor(Component, PhysicsStateListener):
                 if self.next_action is not None:
                     self.begin_action(self.next_action)
                     self.next_action = None
+        
