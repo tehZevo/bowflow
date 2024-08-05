@@ -24,8 +24,8 @@ from game.utils import bezier
 def generate_floor(world, mapdef):
     floor = MapBoundary(Vector2(50, 20)).create(world, mapdef)
 
-    #create portal to same mapdef
-    portal = world.create_entity([Portal(mapdef)])
+    from game.map.seaside_city import seaside_city
+    portal = world.create_entity([Portal(seaside_city)])
 
     # foothold_bezier(world, Vector2(20, 1), Vector2(23, -1), Vector2(28, 1), Vector2(30, 3))
 
