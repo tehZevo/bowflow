@@ -19,8 +19,10 @@ from game.components.ui.text import Text
 from game.constants import DT
 from game.data.skill_tree import SkillTree
 from game.data.player_data import PlayerData
-from game.map.beach import beach
+# from game.map.beach import beach
+from game.map.layout_generator_test import layout_generator_test
 from game.constants import PPU, WIDTH_UNITS, HEIGHT_UNITS, SCREEN_SCALE
+
 
 class Game:
     def __init__(self):
@@ -80,7 +82,7 @@ class Game:
             self.hud
         ])
         
-        self.create_new_world(beach)
+        self.create_new_world(layout_generator_test)
 
     def change_map(self, mapdef):
         self.next_mapdef = mapdef
