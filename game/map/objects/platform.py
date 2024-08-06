@@ -5,6 +5,7 @@ from .map_feature import MapFeature
 from game.components.physics.foothold import Foothold
 from game.components.physics.rope import Rope
 from game.components.physics.wall import Wall
+from game.map.map_layout import CellFeature
 
 class Platform(MapFeature):
     def __init__(self):
@@ -49,8 +50,8 @@ class Platform(MapFeature):
         
         #TODO: try to place a rope until it hits a platform, specifically
 
-        layout.set_cells(x, y, length, 1, self)
-        layout.set_cells(rope_start, y - rope_length, 1, rope_length, self)
+        layout.set_cells(x, y, length, 1, CellFeature.PLATFORM)
+        layout.set_cells(rope_start, y - rope_length, 1, rope_length, CellFeature.ROPE)
 
         #TODO: include rope in bounds
         self.set_bounds(x, y, length, 1)

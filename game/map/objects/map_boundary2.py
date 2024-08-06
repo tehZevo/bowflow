@@ -3,6 +3,7 @@ from pygame.math import Vector2
 from .map_feature import MapFeature
 from game.components.physics.foothold import Foothold
 from game.components.physics.wall import Wall
+from game.map.map_layout import CellFeature
 
 #TODO: floor/wall/ceiling thickness
 class MapBoundary(MapFeature):
@@ -27,9 +28,10 @@ class MapBoundary(MapFeature):
         self.floor = floor
         self.walls = [left_wall, right_wall]
 
-        layout.set_cells(*floor, self)
-        layout.set_cells(*left_wall, self)
-        layout.set_cells(*right_wall, self)
+        #TODO: change to cellfeatures
+        layout.set_cells(*floor, CellFeature.PLATFORM)
+        layout.set_cells(*left_wall, CellFeature.WALL)
+        layout.set_cells(*right_wall, CellFeature.WALL)
 
         self.set_bounds(0, 0, width, height)
 
